@@ -1,0 +1,338 @@
+{% extends 'users/user-base.html' %}
+
+{% load static %}
+{% block title %}控制台{% endblock %}
+{% block custom_css %}
+    <style>
+        td{
+            vertical-align:middle !important;
+        }
+    </style>
+{% endblock %}
+
+{% block custom_js %}{% endblock %}
+
+{% block content %}
+   <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#tab").on("click", ":button", function (event) {
+                var container_name = $(this).closest("tr").find("td").eq(2).text();
+                var user_name = $(this).closest("tr").find("td").eq(1).text();
+                console.log(container_name);
+                var btn_id = $(this).attr('id');
+                if (btn_id == 'container_delete') {
+                    $("#bar-text").text("正在进行进行容器回收，请稍后");
+                    $("#barModal").modal("show");
+                    $("#container_delete").attr("disabled", true);
+                    $.ajax({
+                        type: "POST",
+                        data: {'container_name': container_name},
+                        url: "/container/container_delete/",
+                        success: function (data) {
+                            if (data["st"] === 1) {
+                                $("#bar-text").text("正在删除容器，请稍后");
+                                $("#div-bar").width("50%");
+                                if (!$("body").hasClass("modal-open")) {
+                                    $("#barModal").modal("show");
+                                }
+                                $.ajax({
+                                    type: "POST",
+                                    data: {'container_data': JSON.stringify(data["container_data"])},
+                                    url: "/container/clear_volume/",
+                                    success: function (data) {
+                                        if (data["st"] == 1) {
+                                            // alert("已同意该虚拟机的申请");
+                                            $("#bar-text").text("正在删除容器卷（已完成）");
+                                            $("#div-bar").width("100%");
+                                            if (!$("body").hasClass("modal-open")) {
+                                                $("#barModal").modal("show");
+                                            }
+                                            $("#btn-bar").bind("click", function () {
+                                                window.location.reload();
+                                            })
+                                        }
+                                    },
+                                    error: function () {
+                                        if ($("body").hasClass("modal-open")) {
+                                            $("#barModal").modal("hide");
+                                        }
+                                        alert("失败");
+                                        $("#container_delete").attr("disabled", false);
+                                    }
+                                })
+                                {#window.location.reload();#}
+                            } else if (data["st"] === 2) {
+                                if ($("body").hasClass("modal-open")) {
+                                    $("#barModal").modal("hide");
+                                }
+                                alert("容器连接成功但删除失败");
+                                $("#container_delete").attr("disabled", false);
+                            } else if (data["st"] === 3) {
+                                if ($("body").hasClass("modal-open")) {
+                                    $("#barModal").modal("hide");
+                                }
+                                alert("容器连接节点失败");
+                                $("#container_delete").attr("disabled", false);
+                            }
+                        },
+                        error: function () {
+                            alert("false");
+                        }
+                    })
+                }
+                if (btn_id == 'container_shutdown') {
+                    $.ajax({
+                        type: "POST",
+                        data: {'container_name': container_name, 'user_name': user_name},
+                        url: "/container/container_shutdown/",
+                        success: function (data) {
+                            if (data["st"] === 1) {
+                                alert("成功");
+                                window.location.reload();
+                            } else if (data["st"] === 2) {
+                                alert("容器连接成功但停止失败");
+                            } else if (data["st"] === 3) {
+                                alert("容器连接节点失败");
+                            }
+                        },
+                        error: function () {
+                            alert("false");
+                        }
+                    })
+                }
+                if (btn_id == 'container_start') {
+                    $.ajax({
+                        type: "POST",
+                        data: {'container_name': container_name, 'user_name': user_name},
+                        url: "/container/container_start/",
+                        success: function (data) {
+                            if (data["st"] === 1) {
+                                alert("成功");
+                                window.location.reload();
+                            } else if (data["st"] === 2) {
+                                alert("容器连接成功但停止失败");
+                            } else if (data["st"] === 3) {
+                                alert("容器连接节点失败");
+                            } else if (data["st"] === 4) {
+                                alert("容器已经启动");
+                            }
+                        },
+                        error: function () {
+                            alert("false");
+                        }
+                    })
+                }
+                if (btn_id == 'container_restart') {
+                    $.ajax({
+                        type: "POST",
+                        data: {'container_name': container_name, 'user_name': user_name},
+                        url: "/container/container_restart/",
+                        success: function (data) {
+                            if (data["st"] === 1) {
+                                alert("成功");
+                                window.location.reload();
+                            } else if (data["st"] === 2) {
+                                alert("容器连接成功但重启失败");
+                            } else if (data["st"] === 3) {
+                                alert("容器连接节点失败");
+                            } else if (data["st"] === 4) {
+                                alert("容器已经启动");
+                            }
+                        },
+                        error: function () {
+                            alert("false");
+                        }
+                    })
+                }
+                if (btn_id == 'container_details') {
+                    $.ajax({
+                        type: "POST",
+                        data: {'container_name': container_name, 'user_name': user_name},
+                        url: "/container/container_details/",
+                        success: function (data) {
+                            if (data["st"] === 1) {
+                                alert("挂载点:   "+data["volume"]+"\n"
+                                +"卷名:    "+data["volume_name"]);
+                                {#window.location.reload();#}
+                            } else if (data["st"] === 2) {
+                                alert("容器连接成功但重启失败");
+                            }
+                        },
+                        error: function () {
+                            alert("false");
+                        }
+                    })
+                }
+            });
+        })
+    </script>
+    <div class="down-main">
+        <div class="left-main left-full">
+            <div class="sidebar-fold"><span class="glyphicon glyphicon-menu-hamburger"></span></div>
+            <div class="subNavBox">
+                <div class="sBox">
+                    <div class="subNav sublist-down"><span
+                            class="title-icon glyphicon glyphicon-chevron-down"></span><span class="sublist-title">云计算基础服务</span>
+                    </div>
+                    <ul class="navContent" style="display:block">
+                        <li >
+                            <div class="showtitle" style="width:100px;">我的云主机</div>
+
+                            <a href="{% url 'users:usercontrol' %}"><span
+                                    class="sublist-icon glyphicon glyphicon-cloud"></span><span
+                                    class="sub-title">我的云主机</span></a>
+                        </li>
+<!--                         <li >-->
+<!--                            <div class="showtitle" style="width:100px;">我的备份</div>-->
+
+<!--                            <a href="{% url 'users:snapshotlist' %}"><span-->
+<!--                                    class="sublist-icon glyphicon glyphicon-cloud"></span><span-->
+<!--                                    class="sub-title">我的备份</span></a>-->
+<!--                        </li>-->
+                        <li >
+                            <div class="showtitle" style="width:100px;">我的容器</div>
+
+                            <a href="{% url 'users:container_list' %}"><span
+                                    class="sublist-icon glyphicon glyphicon-cloud"></span><span
+                                    class="sub-title">我的容器</span></a>
+                        </li>
+                        <li >
+                            <div class="showtitle" style="width:100px;">虚拟机申请记录</div>
+
+                            <a href="{% url 'users:vmcheck' %}"><span
+                                    class="sublist-icon glyphicon glyphicon-cloud"></span><span
+                                    class="sub-title">虚拟机申请记录</span></a>
+                        </li>
+<!--                         <li >-->
+<!--                            <div class="showtitle" style="width:100px;">端口申请记录</div>-->
+
+<!--                            <a href="{% url 'users:portRecords' %}"><span-->
+<!--                                    class="sublist-icon glyphicon glyphicon-check"></span><span-->
+<!--                                    class="sub-title">端口申请记录</span></a>-->
+<!--                        </li>-->
+                        <li >
+                            <div class="showtitle" style="width:100px;">配置申请记录</div>
+
+                            <a href="{% url 'users:configurationRecords' %}"><span
+                                    class="sublist-icon glyphicon glyphicon-check"></span><span
+                                    class="sub-title">配置申请记录</span></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">我的容器</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item">云计算基础服务</li>
+                                            <li class="breadcrumb-item active" aria-current="page">我的容器</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+
+                    <div class="row">
+                    <!-- ============================================================== -->
+                    <!-- basic table  -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered first" id="tab">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>用户</th>
+                                            <th>容器名</th>
+                                            <th>镜像</th>
+                                            <th>内存</th>
+                                            <th>处理器</th>
+                                            <th>节点地址</th>
+                                            <th>网关地址</th>
+                                            <th>所在域</th>
+                                            <th style="text-align: center">端口</th>
+                                            <th colspan="4" style="text-align: center">操作</th>
+                                            <th>更多详情</th>
+                                        </tr>
+                                        </thead>
+                                        {% for container in containerlist %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td><a href="">{{ container.user.username }}</a></td>
+                                                <td>{{ container.name }}</td>
+                                                <td>{{ container.img.img_name }}</td>
+                                                <td>{{ container.memory }}G</td>
+                                                <td>{{ container.cpu_cores }}核</td>
+                                                <td>{{ container.node.ip }}</td>
+                                                <td>{{ container.region.gw_ip }}</td>
+                                                <td>{{ container.region.domain }}</td>
+                                                <td>{{ container.port }}</td>
+                                                {% if container.is_del == 0 %}
+                                                    <td>
+                                                        <button type="button" id="container_delete"
+                                                                class="btn btn-danger">
+                                                            <span class="glyphicon glyphicon-trash">回收</span></button>
+                                                    </td>
+                                                {% else %}
+                                                    <td>已回收</td>
+                                                {% endif %}
+
+                                                {% if container.state == 0 %}
+                                                    <td>
+                                                        <button type="button" id="container_shutdown"
+                                                                class="btn btn-info">
+                                                            <span class="glyphicon glyphicon-pause">关闭</span></button>
+                                                    </td>
+                                                {% else %}
+                                                    <td><span class="glyphicon glyphicon-stop">已关闭</span></td>
+                                                {% endif %}
+                                                <td>
+                                                    <button type="button" id="container_start" class="btn btn-info">
+                                                        <span class="glyphicon glyphicon-fast-forward">启动</span>
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <button type="button" id="container_restart"
+                                                            class="btn btn-warning">
+                                                        <span class="glyphicon glyphicon-wrench">重启</span></button>
+                                                </td>
+                                                <td>
+                                                    <button type="button" id="container_details"
+                                                            class="btn btn-primary">
+                                                        <span class="glyphicon glyphicon-eye-open">更多详情</span></button>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

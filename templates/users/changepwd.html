@@ -1,0 +1,148 @@
+<!doctype html>
+{% load static %}
+<html lang="zh">
+<head>
+    <title>密码重置</title>
+    <meta http-equiv="Content-Tyuserspe" content="text/html; charset=utf-8" />
+    <link href="{% static 'css/style2.css' %}" rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+     <link href="{% static 'css/validationEngine.jquery.css' %}" rel='stylesheet' type='text/css'/>
+    <style>
+         .changeButton {
+            font-size: 1em;
+            color: #fff;
+            background: #2dde98;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            padding: 15px 10px;
+            -webkit-appearance: none;
+            width: 100%;
+            font-weight: 400;
+            transition: .5s all;
+            -webkit-transition: .5s all;
+            -moz-transition: .5s all;
+            -o-transition: .5s all;
+            -ms-transition: .5s all;
+            text-transform: uppercase;
+            margin-top: 1.3em;
+            font-family: 'Rationale', sans-serif;
+        }
+         .changeButton:hover{
+            font-size: 1em;
+            color: #fff;
+            background: #f2545f;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            padding: 15px 10px;
+            -webkit-appearance: none;
+            width: 100%;
+            font-weight: 400;
+            transition: .5s all;
+            -webkit-transition: .5s all;
+            -moz-transition: .5s all;
+            -o-transition: .5s all;
+            -ms-transition: .5s all;
+            text-transform: uppercase;
+            margin-top: 1.3em;
+            font-family: 'Rationale', sans-serif;
+        }
+    </style>
+    <!-- js -->
+    <script>window.jQuery || document.write('<script src="{% static 'js/jquery-2.1.1.min.js' %}"><\/script>')</script>
+    <script src="{% static 'js/jquery.validationEngine.js' %}"></script>
+    <script src="{% static 'js/jquery.validationEngine.min.js' %}"></script>
+    <script src="{% static 'js/vidbg.js' %}"></script>
+    <script src="{% static 'js/jquery.form.js' %}"></script>
+    <script type="text/javascript">
+        jQuery(function($){
+            $('body').vidbg({
+                 'mp4': '{% static "images/mp4.mp4" %}',
+            }, {
+                // Options
+                muted: true,
+                loop: true,
+                overlay: true,
+            });
+        });
+
+        jQuery(document).ready(function () {
+            jQuery("#changeForm").validationEngine({scroll: false});
+
+            $("#changeButton").click(function () {
+                if (!$("form#changeForm").validationEngine("validate")) return;
+                var password = $("#id_password2").val();
+                var username = $("#id_username").val();
+
+                $.ajax({
+                    type: "POST",
+                    data: {'password': password,'username':username},
+                    url: "{% url 'users:change' %}",
+                    success: function (data) {
+                        console.log(data)
+                        if (data["st"] == 1) {
+                            alert("修改成功")
+                           window.location.href = "{% url 'users:login' %}";
+                        }
+                        if (data["st"] == 0) {
+                            alert("修改失败")
+                        }
+
+                    },
+                    error: function () {
+                      alert("false");
+                    }
+                })
+        })
+    })
+    </script>
+</head>
+<body>
+<div class="contain">
+<h1><a href="{% url 'index' %}"style="color:white">DragonStack Cloud</a></h1>
+<div class="main">
+
+
+    <div class="login-top left">
+        <div class="social_icons">
+            <div class="w3-signup-head-top">
+                {% if username %}
+                    <div>
+                        <h3>密码重置</h3>
+                        <h5>欢迎您：<em>{{username}}</em></h5>
+                    </div>
+                {% else %}
+                    <div>
+                        <h3>激活失败</h3>
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+        <form method="post" id="changeForm">
+                <input type="hidden" id="id_username" name="username" value="{{username}}">
+                <input type="password" id="id_password1" name="password1"
+                       class="password validate[required,minSize[6],maxSize[20]]" placeholder="新密码" required="">
+
+                <input type="password" id="id_password2" name="password2"
+                       class="password validate[required,equals[id_password1]]" placeholder="确认密码"
+                       required="">
+            <input type="button" class="changeButton" id="changeButton" value="修改"/>
+        </form>
+
+        <div class="clear"></div>
+    </div>
+
+
+</div>
+<div class="clear"></div>
+<div class="copy-right w3l-agile logbotom">
+    <p>Copyright © 2017 Provincial Key Laboratory of Network and System Security, Xidian University, Shaanxi Province, China.</p>
+</div>
+
+</div>
+</body>
+</html>
+
+

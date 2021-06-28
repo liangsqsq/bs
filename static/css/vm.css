@@ -1,0 +1,304 @@
+body{
+    background-color: #fbfaf8;
+}
+.fc{
+    color: #1a273f;
+}
+.fc:hover{
+    color:#f2545f;
+}
+.server{
+    background: white;
+    border-bottom:solid 1px #e5e5e5;
+    margin-top: 90px;
+    height:100px;
+    padding-left:20px;
+}
+.serverul{
+	margin-top:0.6rem;
+}
+.serverli{
+    margin:4px;
+    margin-top:-5px;
+}
+.addr{
+    background: white;
+    border-bottom: solid 1px #e5e5e5;
+    height: 100px;
+    padding-left: 20px;
+    padding-top: 26px;
+}
+
+.addul{
+	margin-top:0.6rem;
+}
+.addrli{
+    margin:4px;
+    margin-top:-5px;
+}
+.addrfont{
+    font-size:13px;
+    margin-left: 120px;
+}
+.addrdown{
+    background:#04b5ef;
+    color:white;
+}
+
+.usetime{
+    background: white;
+    border-bottom:solid 1px #e5e5e5;
+    height:100px;
+    padding-left:20px;
+    padding-top: 26px;
+
+}
+.usetimeul{
+    margin-top: 0.6rem;
+}
+
+.usetimeli {
+    margin: 4px;
+    margin-top:-5px;
+}
+
+.usetimedown {
+    background: #04b5ef;
+    color: white;
+}
+
+
+.installway {
+    background: white;
+    border-bottom: solid 1px #e5e5e5;
+    height: 100px;
+    padding-left: 20px;
+    padding-top: 26px;
+
+}
+
+.installwayul {
+    margin-top: 0.6rem;
+}
+
+.installwayli {
+    margin: 4px;
+    margin-top:-5px;
+
+}
+
+.restype {
+    background: white;
+    border-bottom: solid 1px #e5e5e5;
+    height: 100px;
+    padding-left: 20px;
+    padding-top: 26px;
+
+}
+
+.restypeul {
+    margin-top: 0.6rem;
+}
+
+.restypeli {
+    margin: 4px;
+    margin-top:-5px;
+
+}
+
+.node {
+    background: white;
+    border-bottom: solid 1px #e5e5e5;
+    height: 200px;
+    padding-left: 20px;
+    padding-top: 26px;
+
+}
+
+.addressul {
+    margin-top: 0.6rem;
+}
+
+.addressli {
+    margin: 4px;
+    margin-top:-5px;
+
+}
+
+.installwaydown {
+    background: #04b5ef;
+    color: white;
+}
+
+
+.sys {
+    background: white;
+    border-bottom: solid 1px #e5e5e5;
+
+    height: 100px;
+    padding-left: 20px;
+    padding-top: 26px;
+}
+
+.sysli {
+    margin-right:15px;
+    margin-bottom: 10px;
+
+}
+.syswin{
+    height:63px;
+    width:200px;
+    padding-left:32px;
+    background: url("../images/win7.png");
+    /*   background:black;*/
+    background-repeat: no-repeat;
+    background-position:11px;
+}
+.syswindown{
+    background-color:#04b5ef;
+    color:white;
+}
+.syswins{
+    height:63px;
+    width:200px;
+    padding-left:60px;
+    background: url("../images/win7.png");
+    /*   background:black;*/
+    background-repeat: no-repeat;
+    background-position:11px;
+}
+.sysubu{
+    height:63px;
+    width:200px;
+    padding-left:32px;
+    background: url("../images/ubu.png");
+    /*   background:black;*/
+    background-repeat: no-repeat;
+    background-position:11px;
+}
+.sysubus{
+    height:63px;
+    width:200px;
+    padding-left:50px;
+    background: url("../images/ubu.png");
+    /*   background:black;*/
+    background-repeat: no-repeat;
+    background-position:11px;
+}
+.syscen{
+    height:63px;
+    width:200px;
+    padding-left:32px;
+    background: url("../images/centos.png");
+    /*   background:black;*/
+    background-repeat: no-repeat;
+    background-position:11px;
+}
+
+.ram{
+    background: white;
+    border-bottom:solid 1px #e5e5e5;
+
+    height:100px;
+    padding-left:20px;
+    padding-top: 26px;
+}
+.ram label{
+    margin-right:80px;
+}
+.ram input{
+    margin-top:10px;
+}
+.cpu{
+    background: white;
+    border-bottom:solid 1px #e5e5e5;
+
+    height:100px;
+    padding-left:20px;
+    padding-top: 26px;
+}
+.cpu label{
+    margin-right:80px;
+}
+.cpu input{
+    margin-top: 10px;
+}
+.password{
+    background: white;
+    border-bottom:solid 1px #e5e5e5;
+
+    height:100px;
+    padding-left:20px;
+    padding-top: 30px;
+}
+.hdisk{
+    background: white;
+    border-bottom:solid 1px #e5e5e5;
+
+    height:100px;
+    padding-left:20px;
+    padding-top: 26px;
+}
+.chosen-select-os{
+    margin-left: 45px;
+    margin-top:10px;
+}
+.chosen-select-disk{
+    margin-left: 45px;
+    margin-top:10px;
+}
+
+.ps{
+    margin-left: 30px;
+    margin-top:8px;
+    border: 1px solid #ccc;
+    width: 232px;
+}
+.showsys{
+    background: white;
+    border-bottom:solid 1px #e5e5e5;
+
+    height:150px;
+    padding-left:20px;
+    padding-top: 26px;
+
+}
+dd label{
+    float:left;
+    margin-top: 10px;
+}
+dd ul{
+    float:left;
+}
+dd ul li{
+    float:left;
+    list-style-type: none;
+
+}
+dd ul li input{
+    background-color: white;
+
+
+    border: 1px solid #e5e5e5;
+    width:120px;
+    height:40px;
+
+    display: block;
+}
+dd ul li input:hover{
+    border-color:#00acee;
+}
+.subinput{
+    margin-right:80px;
+    margin-top:20px;
+    width:120px;
+    height:50px;
+    background:#f2545f;
+    color:white;
+    border:1px;
+    float:right;
+}
+.subinput:hover{
+    background:#ff6904;
+
+}

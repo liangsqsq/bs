@@ -1,0 +1,116 @@
+{% extends 'users/user-base.html' %}
+
+{% load static %}
+{% block title %}虚拟机管理{% endblock %}
+{% block custom_css %}
+    {#    <link href="css/domain.css" rel="stylesheet" title="" type="text/css"/>#}
+    <style>
+        td{
+            vertical-align:middle !important;
+        }
+    </style>
+{% endblock %}
+
+{% block custom_js %}{% endblock %}
+
+{% block contentVMrecy %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#tab").on("click", ":button", function (event) {
+                var vm_name = $(this).closest("tr").find("td").eq(2).text();
+                var snapshot_name = $(this).closest("tr").find("td").eq(3).text();
+                console.log(snapshot_name);
+                var btn_id=$(this).attr('id');
+                if (btn_id == 'delete'){
+                    $.ajax({
+                    type: "POST",
+                    data: {'vm_name': vm_name,'snapshot_name':snapshot_name},
+                    url: "/admins/snapshot_delete/",
+                    success: function (data) {
+                        if (data["st"] === 1) {
+                            alert("成功");
+                            window.location.reload();
+                        } else if (data["st"] === 2) {
+                            alert("Failed to delete snapshot");
+                        }
+                    },
+                    error: function () {
+                        alert("false");
+                    }
+                })
+                }
+
+                });
+        })
+    </script>
+
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">虚拟机管理</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item">虚拟机设置</li>
+                                            <li class="breadcrumb-item active" aria-current="page">虚拟机管理</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+
+                    <div class="row">
+                        <!-- ============================================================== -->
+                        <!-- basic table  -->
+                        <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered first" id="tab">
+                                            <thead>
+                                            <tr>
+                                                <th >ID</th>
+                                                <th >用户</th>
+                                                <th >虚拟机</th>
+                                                <th>快照名</th>
+                                                <th>创建时间</th>
+                                            </tr>
+                                            </thead>
+                                            {% for snapshot in snapshots %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td><a href="">{{ snapshot.username.username }}</a></td>
+                                                    <td>{{ snapshot.vmname.name }}</td>
+                                                    <td>{{ snapshot.snapshotName }}</td>
+                                                    <td>{{ snapshot.start_time }}G</td>
+                                                    <td>
+                                                            <button type="button" id="delete" class="btn btn-danger">
+                                                                <span class="glyphicon glyphicon-trash">删除</span></button>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+{% endblock %}

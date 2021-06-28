@@ -1,0 +1,189 @@
+{% extends 'users/user-base.html' %}
+
+{% load static %}
+{% block title %}添加服务节点{% endblock %}
+{% block custom_css %}
+    {#    <link href="css/domain.css" rel="stylesheet" title="" type="text/css"/>#}
+<script>
+    function check_form(){
+        var message = "";
+        if($("#hostname").val() == ""){
+            message = "服务节点不能为空";
+        }else if($("#IP").val() == ""){
+            message = "IP不能为空";
+        }else if($("#SSH").val() == ""){
+            message = "SSH不能为空";
+        }else if($("#username").val() == ""){
+            message = "用户名不能为空";
+        }else if($("#password").val() == ""){
+            message = "密码不能为空";
+        }else if($("#home").val() == ""){
+            message = "用户主目录不能为空";
+        }
+        if(message != ""){
+            $("#tipbody").text(message);
+            $("#tipModal").modal("show");
+            return ;
+        }
+        $("#hostnameForm").submit();
+    }
+</script>
+{% endblock %}
+
+{% block custom_js %}{% endblock %}
+
+{% block contentVMport %}
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">添加容器节点</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item">域管理</li>
+                                            <li class="breadcrumb-item active" aria-current="page">添加容器节点</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+
+                    <div class="row">
+                        <!-- ============================================================== -->
+                        <!-- basic table  -->
+                        <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card" style="background-color:#FFFFFF">
+                                <div class="card-body">
+                                    <form method="post" action="/container/add_dockerNode/" id="hostnameForm">
+                                            <div class="form-group row" style="padding-top:50px">
+                                                <label for="exampleInputHost_name"
+                                                       class="col-12 col-sm-3 col-form-label text-right">容器节点</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="hostname"
+                                                           id="hostname"
+                                                           placeholder="容器节点">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="exampleInputIp" class="col-12 col-sm-3 col-form-label text-right">IP</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="IP" id="IP"
+                                                           placeholder="IP">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="exampleInputSsh_port"
+                                                       class="col-12 col-sm-3 col-form-label text-right">SSH端口</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="SSH" id="SSH"
+                                                           placeholder="SSH端口">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="exampleInputUser"
+                                                       class="col-12 col-sm-3 col-form-label text-right">用户名</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="username"
+                                                           id="username"
+                                                           placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="exampleInputPassword"
+                                                       class="col-12 col-sm-3 col-form-label text-right">密码</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="password"
+                                                           id="password"
+                                                           placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="exampleInputHomeDir"
+                                                       class="col-12 col-sm-3 col-form-label text-right">用户主目录</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="home"
+                                                           id="home"
+                                                           placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="exampleInputBelong"
+                                                       class="col-12 col-sm-3 col-form-label text-right">所在服务器</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <select name="server" id="server">
+                                                        {% for server  in communication_list %}
+                                                            <option value="{{ server }}">{{ server }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="exampleInputBelong"
+                                                       class="col-12 col-sm-3 col-form-label text-right">所在域</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <select name="domain" id="domain">
+                                                        {% for domain  in domain_list %}
+                                                            <option value="{{ domain.id }}">{{ domain.domain }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="exampleIsZabbix"
+                                                       class="col-12 col-sm-3 col-form-label text-right">是否已安装zabbix</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input id="install" type="checkbox" name="is_zabbix" checked/>
+                                                    <label for="install">是</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row text-right">
+                                                <div class="col col-sm-10 col-lg-9 offset-sm-1 offset-lg-0">
+                                                    <button type="button" class="btn btn-space btn-primary" onclick="check_form()">确认</button>
+                                                </div>
+                                            </div>
+                                            <p class="text-danger text-center">{{ message }}</p>
+                                        </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script>
+    $("#server").change(function (){
+        var server_ip = $("#server").val();
+        $.ajax({
+            type: "POST",
+            data: {
+                'server_ip': server_ip,
+            },
+            url: "/admins/get_domain_by_ip/",
+            success: function (data) {
+                var domain_list = data['domain'];
+                var content = "";
+                for(var i=0; i<domain_list.length; i++){
+                    content += "<option value="+ domain_list[i].id +">" + domain_list[i].domain + "</option><br>"
+                }
+                $("#domain").html(content);
+            }
+        })
+    })
+    </script>
+{% endblock %}

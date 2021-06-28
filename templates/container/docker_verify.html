@@ -1,0 +1,264 @@
+{% extends 'users/user-base.html' %}
+
+{% load static %}
+{% block title %}容器审核{% endblock %}
+{% block custom_css %}
+    {#    <link href="css/domain.css" rel="stylesheet" title="" type="text/css"/>#}
+    <style>
+        td{
+            vertical-align:middle !important;
+        }
+    </style>
+{% endblock %}
+
+{% block custom_js %}{% endblock %}
+
+{% block contentVMset %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#tab").on("click", ":button", function (event) {
+                console.log($(this).attr('id'));
+                var btn_id = $(this).attr('id');
+                var apply_id = $(this).closest("tr").find("td").eq(2).text();
+                var username = $(this).closest("tr").find("td").eq(1).text();
+                var domain_ip = $(this).closest("tr").find("td").eq(7).text();
+                console.log(apply_id);
+                if (btn_id == 'agree_docker') {
+                    $("#bar-text").text("正在进行进行容器资源分配，请稍后");
+                    $("#barModal").modal("show");
+                    $("#agree_docker").attr("disabled", true);
+                    $.ajax({
+                        type: "POST",
+                        data: {
+                            'apply_id': apply_id,
+                            'username':username,
+                            'domain_ip': domain_ip,
+                        },
+                        url: "/container/agree_docker/",
+                        success: function (data) {
+
+                            if (data["st"] === 1) {
+                                $("#bar-text").text("已同意该容器的申请（已完成）");
+                                $("#div-bar").width("100%");
+                                if(!$("body").hasClass("modal-open")){
+                                    $("#barModal").modal("show");
+                                }
+                                $("#btn-bar").bind("click", function(){
+                                    window.location.reload();
+                                })
+                            } else if (data["st"] === 2) {
+                                alert("失败:容器启动失败");
+                            } else if (data["st"] === 7) {
+                                alert("失败:容器启动成功，数据库写入失败");
+                            }
+                        },
+                        error: function () {
+                            alert("失败");
+                        }
+                    })
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        data: {
+                            'apply_id': apply_id,
+                            'domain_ip': domain_ip,
+                        },
+                        url: "/container/refuse_docker/",
+                        success: function (data) {
+                            if (data["st"] === 1) {
+                                alert("成功");
+                                window.location.reload();
+                            }
+                        },
+                        error: function () {
+                            alert("失败");
+                        }
+                    })
+                }
+            })
+        })
+
+    </script>
+    <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">容器审核</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item">容器设置</li>
+                                            <li class="breadcrumb-item active" aria-current="page">容器审核</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+
+                    <div class="row">
+                        <!-- ============================================================== -->
+                        <!-- basic table  -->
+                        <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered first" id="tab">
+                                            <thead>
+                                            <tr>
+                                                <th >ID</th>
+                                                <th >用户名</th>
+                                                <th>DockerId</th>
+                                                <th >容器类型</th>
+                                                <th >挂载点</th>
+                                                <th >内存</th>
+                                                <th >处理器</th>
+                                                <th >域IP</th>
+                                                <th>域内节点</th>
+                                                <th >申请时间</th>
+                                                <th >操作</th>
+                                            </tr>
+                                            </thead>
+                                            {% for apply in data %}
+                                                <tr>
+                                                    <td>{{ forloop.counter  }}</td>
+                                                    <td>{{ apply.username }}</td>
+                                                    <td>{{ apply.id }}</td>
+                                                    <td>{{ apply.img_version }}</td>
+                                                    <td>{{ apply.mount_point }}</td>
+                                                    <td>{{ apply.memory }}G</td>
+                                                    <td>{{ apply.cpu_cores }}核</td>
+                                                    <td>{{ apply.region }}</td>
+                                                    <td>{{ apply.domain_node }}</td>
+                                                    <td>{{ apply.apply_time }}</td>
+                                                    {% if apply.state == 0 %}
+                                                        <input type="hidden" id="agreedocker" name="docker_id"
+                                                               value={{ apply.id }}>
+                                                        <td>
+                                                            <button type="button" class="btn btn-success"
+                                                                    id="agree_docker">
+                                                                <span class="glyphicon glyphicon-ok"></span>
+                                                                同意
+                                                            </button>
+                                                            <button type="button" class="btn btn-danger"
+                                                                    id="refuse_docker">
+                                                                <span class="glyphicon glyphicon-remove"></span>
+                                                                拒绝
+                                                            </button>
+                                                        </td>
+                                                    {% elif apply.state == 1 %}
+                                                        <td>
+                                                            <button type="button" class="btn btn-info">
+                                                                <span class="glyphicon glyphicon-upload"></span>
+                                                                已同意
+                                                            </button>
+                                                        </td>
+                                                    {% else %}
+                                                        <td>
+                                                            <button type="button" class="btn btn-warning">
+                                                                <span class="glyphicon glyphicon-download"></span>
+                                                                已拒绝
+                                                            </button>
+                                                        </td>
+
+                                                    {% endif %}
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                        {% if data.paginator.num_pages > 1%}
+                                            <nav aria-label="Page navigation example">
+                                                <ul class="pagination pull-right" style="padding-right: 50px;">
+                                                    {% if data.number == 1 %}
+                                                        <li class="disabled page-item">
+                                                            <a aria-label="First" class="page-link">
+                                                                <span aria-hidden="true">&laquo;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="page-item">
+                                                            <a href="{% url 'container:docker_verify' 1 %}" aria-label="First" class="page-link">
+                                                                <span aria-hidden="true">&laquo;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% endif %}
+                                                    {% if data.has_previous %}
+                                                        <li class="page-item">
+                                                            <a href="{% url 'container:docker_verify' data.previous_page_number %}" aria-label="Previous" class="page-link">
+                                                                <span aria-hidden="true">&lt;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="disabled page-item">
+                                                            <a aria-label="Previous" class="page-link">
+                                                                <span aria-hidden="true">&lt;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% endif %}
+                                                    {% for num in display_list %}
+                                                        {% if data.number == num %}
+                                                            <li class="active page-item">
+                                                                <a class="page-link">
+                                                                    <span aria-hidden="true">{{num}}</span>
+                                                                </a>
+                                                            </li>
+                                                        {% else %}
+                                                            <li class="page-item">
+                                                                <a href="{% url 'container:docker_verify' num %}" class="page-link">
+                                                                    <span aria-hidden="true">{{num}}</span>
+                                                                </a>
+                                                            </li>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if data.has_next %}
+                                                        <li class="page-item">
+                                                            <a href="{% url 'container:docker_verify' data.next_page_number %}" aria-label="Next" class="page-link">
+                                                                <span aria-hidden="true">&gt;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="disabled page-item">
+                                                            <a aria-label="Next" class="page-link">
+                                                                <span aria-hidden="true">&gt;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% endif %}
+                                                    {% if data.number == data.paginator.num_pages %}
+                                                        <li class="disabled page-item">
+                                                            <a aria-label="Last" class="page-link">
+                                                                <span aria-hidden="true">&raquo;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="page-item">
+                                                            <a href="{% url 'container:docker_verify' data.paginator.num_pages %}" aria-label="Last" class="page-link">
+                                                                <span aria-hidden="true">&raquo;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% endif %}
+                                                    <span class="total" style="line-height: 30px; margin-left: 10px;">
+                                                        共有{{data.paginator.count}}条记录
+                                                    </span>
+                                                </ul>
+                                            </nav>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+{% endblock %}

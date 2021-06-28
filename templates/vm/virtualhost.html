@@ -1,0 +1,418 @@
+{% extends 'base.html' %}
+{% block title %}虚拟云服务{% endblock %}
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static 'css/vm.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-slider.css' %}">
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{% static 'js/vm.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var server_ip = '';
+            var addrli = '';
+            var ram = '';
+            var cpu = '';
+            var usetimeli = '';
+            var installwayli = '';
+            $(".serverli").click(function () {
+                server_ip = $(this).find('input[type=button]').attr("id");
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        'server_ip': server_ip,
+                    },
+                    url: "/admins/get_domain_by_ip/",
+                    success: function (data) {
+                        var domain_list = data['domain'];
+                        var os_list = data['os'];
+                        var content = "";
+                        for(var i=0; i<domain_list.length; i++){
+                            content += '<li class="addrli"><input type="button" value="'+ domain_list[i].domain + '" id="' + domain_list[i].id + '"></li>'
+                        }
+                        $("#addrul").html(content);
+                        $('.addrli input').click(function () {
+                            if ($('.addrli input').hasClass('addrdown')) {
+                                $('.addrli input').removeClass('addrdown');
+                                $(this).addClass('addrdown');
+                            } else {
+                                $(this).addClass('addrdown');
+                            }
+                        });
+                        $(".addrli").click(function () {
+                            addrli = $(this).find('input[type=button]').attr("id");
+                        });
+                        content = '<option value="">-------选择操作系统-------</option>';
+                        for(var i=0; i<os_list.length; i++){
+                            content += '<option value="' + os_list[i].id + '">'+ os_list[i].os_version +'</option>'
+                        }
+                        $("#os_select").html(content);
+                        var vm_type = $(".chosen-select-os").find("option:selected").text();
+                    }
+                })
+            });
+            $(".addrli").click(function () {
+                addrli = $(this).find('input[type=button]').attr("id");
+            });
+            $(".usetimeli").click(function () {
+                usetimeli = $(this).find('input[type=button]').attr("id");
+            });
+            $(".installwayli").click(function () {
+                installwayli = $(this).find('input[type=button]').attr("id");
+            });
+
+            $(".subinput").click(function () {
+                var vm_region = addrli;
+                var vm_usetime = usetimeli;
+                var vm_installway = installwayli;
+                var raminput = $(".raminput").val();
+                switch (raminput) {
+                    case "1":
+                        ram = 1;
+                        break;
+                    case "2":
+                        ram = 2;
+                        break;
+                    case "3":
+                        ram = 4;
+                        break;
+                    case "4":
+                        ram = 8;
+                        break;
+                }
+                ;
+                var cpuinput = $(".cpuinput").val();
+                switch (cpuinput) {
+                    case "1":
+                        cpu = 1;
+                        break;
+                    case "2":
+                        cpu = 2;
+                        break;
+                    case "3":
+                        cpu = 4;
+                        break;
+                    case "4":
+                        cpu = 8;
+                        break;
+                }
+                ;
+                var vm_type = $(".chosen-select-os").find("option:selected").text();
+                var disk = $(".chosen-select-disk").find("option:selected").text();
+                switch (disk) {
+                    case "40G":
+                        disk = 40;
+                        break;
+                    case "60G":
+                        disk = 60;
+                        break;
+                    case "80G":
+                        disk = 80;
+                        break;
+                    case "100G":
+                        disk = 100;
+                        break;
+                }
+                ;
+                var apply_time = Math.floor(new Date().getTime() / 1000);
+<!--                var password = $(".ps").val();-->
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        'server_ip': server_ip,
+                        'vm_region': vm_region,
+                        'vm_type': vm_type,
+                        'selected_class':selectclass,
+						'selected_classNum':selected_classNum,
+                        'apply_time': apply_time,
+                        'password': "",
+                        'disk': disk,
+                        'memory': ram,
+                        'cpu': cpu,
+                        'usetime': vm_usetime,
+                        'installway': vm_installway,
+                    },
+                    url: "{% url 'vm:apply_vm' %}",
+                    success: function (data) {
+
+                        if (data["st"] == 1) {
+                            alert("申请成功，请等待管理员审核")
+                            window.location.href = "{% url 'index' %}"
+                        } else {
+                            alert("申请失败")
+                            window.location.href = "{% url 'vm:virtualhost' %}"
+                        }
+                    },
+                    error: function () {
+                        alert("false");
+                    }
+                })
+            })
+        })
+
+    </script>
+    <section id="program" class="parallax-section">
+        <div class="container">
+            <div class="row">
+
+                <div class="wow fadeInUp col-md-12 col-sm-12" data-wow-delay="0.6s">
+                    <div class="section-title">
+                        <h2>虚拟云主机申请</h2>
+                    </div>
+                </div>
+
+                <form>
+                    <div class="server">
+                        <dl>
+                            <dd>
+                                <label>服务器选择：</label>
+                                <ul class="serverul">
+                                    {% for server in server_list %}
+                                        <li class="serverli">
+                                            <input type="button" value="{{ server }}" id="{{ server }}">
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </dd>
+                        </dl>
+                    </div>
+
+                    <div class="addr">
+                        <dl>
+                            <dd>
+                                <label>地域选择：</label>
+                                <ul class="addul" id="addrul">
+                                    {% for domain in domain_list %}
+                                        <li class="addrli">
+                                            <input type="button" value="{{ domain.domain }}" id="{{ domain.id }}">
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </dd>
+                        </dl>
+                        </br>
+                        <p class="addrfont">用户可根据需求选择相应地域</p>
+                    </div>
+
+                    <div class="usetime">
+                        <dl>
+                            <dd>
+                                <label>使用时间：</label>
+                                <ul class="usetimeul">
+                                    <li class="usetimeli">
+                                        <input type="button" value="长期使用" id="1">
+                                    </li>
+                                    <li class="usetimeli">
+                                        <input type="button" onclick="warning()" value="临时使用" id="0">
+                                    </li>
+                                </ul>
+                            </dd>
+                        </dl>
+                        <p class="addrfont">虚拟机临时使用关机自动销毁!</p>
+                    </div>
+
+                    <script>
+                        function warning() {
+                            window.alert("虚拟机临时使用关机自动销毁!")
+                        }
+                    </script>
+
+                    <div class="installway">
+                        <dl>
+                            <dd>
+                                <label>安装方式：</label>
+                                <ul class="installwayul">
+                                    <li class="installwayli">
+                                        <input type="button" value="自主安装" id="iso">
+                                    </li>
+                                    <li class="installwayli">
+                                        <input type="button" value="快速使用" id="clone">
+                                    </li>
+                                </ul>
+                            </dd>
+                        </dl>
+                    </div>
+
+                    <div class="restype">
+                        <dl>
+                            <dd>
+                                <label>类型：</label>
+								<select data-placeholder="选择类型" name="" id="selectclass">
+                                    <option value="">-------选择类型-------</option>
+                                    <option value="1">武器</option>
+                                    <option value="2">雷达</option>
+                                    <option value="3">计算资源</option>
+                                </select>
+								<ul class="restypeul" id="selectchild">
+								       <li class="restypeli">
+								           <select data-placeholder="选择武器型号" id="selected1" class="chosen-select-class" style="display:none">
+								               <option value="">-------选择武器型号-------</option>
+								               <option value="101">101  A2G_S1机炮</option>
+								               <option value="102">102  A2G_S2红外近距导弹</option>
+								               <option value="103">103  A2G_S3红外中距导弹</option>
+								               <option value="104">104  A2G_M1红外远距导弹</option>
+								               <option value="105">105  A2G_M2智能炸弹</option>
+								               <option value="106">106  A2G_L1空空导弹</option>
+								           </select>
+								       </li>
+								       <li class="restypeli">
+								           <select data-placeholder="选择雷达型号" id="selected2" class="chosen-select-class" style="display:none">
+								               <option value="">-------选择雷达型号-------</option>
+								               <option value="201">201  RD_A1 DAS</option>
+								               <option value="202">202  RD_A2 光雷</option>
+								               <option value="203">203  RD_A3 电子战EW</option>
+								               <option value="204">204  RD_D1 火控雷达</option>
+								               <option value="205">205  RD_D2 SAR雷达</option>
+								               <option value="206">206  RD_S1无线通信雷达</option>
+								           </select>
+								       </li>
+								       <li class="restypeli">
+								           <select data-placeholder="选择计算资源型号" id="selected3" class="chosen-select-class" style="display:none">
+								               <option value="">-------选择计算资源型号-------</option>
+								               <option value="301">301  GPP</option>
+								               <option value="302">302  VMM</option>
+								           </select>
+								       </li>
+                                </ul>
+                            </dd>
+                        </dl>
+                    </div>
+                    <script>
+                        //资源类型下拉框选择
+                                    var domselected1 = document.getElementById('selected1');
+                                    var domselected2 = document.getElementById('selected2');
+                                    var domselected3 = document.getElementById('selected3');
+
+                                    var classobj = document.getElementById('selectclass');
+                                    var selectedIndex = classobj.selectedIndex;
+
+                                    var selectclass = '';
+                                    var selected_classNum = '';
+                                    classobj.onchange = function selectClass(){
+                                            selectclass = classobj.options[classobj.selectedIndex].value;
+                                            if(selectclass == '1') {
+                                                onlyshow(domselected1,domselected2,domselected3);
+
+                                            }
+                                            else if(selectclass == '2')  {
+                                                onlyshow(domselected2,domselected1,domselected3);
+
+                                            }
+                                            else if(selectclass == '3') {
+                                                onlyshow(domselected3,domselected1,domselected2);
+                                            }
+                                            else console.log('暂无信息')
+                                    }
+                                    document.getElementById('selectchild').onchange = function(){
+                                        if(selectclass == '1') {
+                                                selected_classNum = domselected1.options[domselected1.selectedIndex].value;
+                                            }
+                                            else if(selectclass == '2')  {
+
+                                                selected_classNum = domselected2.options[domselected2.selectedIndex].value;
+                                            }
+                                            else if(selectclass == '3') {
+
+                                                selected_classNum = domselected3.options[domselected3.selectedIndex].value;
+                                            }
+                                            else console.log('暂无信息')
+                                                console.log(selected_classNum)
+                                    }
+                                    function onlyshow(showdom1, dom2, dom3) {//todo多个参数
+                                        showdom1.style.display = 'block';
+                                        dom2.style.display = 'none';
+                                        dom3.style.display = 'none';
+                                        console.log(showdom1);
+                                    }
+
+                    </script>
+
+                    <div class="sys">
+                        <dl>
+                            <dd>
+                                <label>镜像选择：</label>
+                                <select data-placeholder="选择操作系统" class="chosen-select-os" id="os_select">
+                                    <option value="">-------选择操作系统-------</option>
+                                    {% for os  in os_list %}
+                                        <option value="{{ os.id }}">{{ os.os_version }}</option>
+                                    {% endfor %}
+                                </select>
+                            </dd>
+                        </dl>
+                    </div>
+
+                    <div class="ram">
+                        <dl>
+
+                            <dd>
+                                <label>内存：</label>
+                                <input id="ex21" class="raminput" type="text"
+                                       data-provide="slider"
+                                       data-slider-ticks="[1, 2, 3, 4]"
+                                       data-slider-ticks-labels='["1G", "2G", "4G", "8G"]'
+                                       data-slider-min="1"
+                                       data-slider-max="4"
+                                       data-slider-step="1"
+                                       data-slider-value="4"
+                                       data-slider-tooltip="hide"/>
+                            </dd>
+                        </dl>
+                    </div>
+
+                    <div class="cpu">
+                        <dl>
+                            <dd>
+                                <label>CPU：</label>
+                                <input id="ex22" class="cpuinput" type="text"
+                                       data-provide="slider"
+                                       data-slider-ticks="[1, 2, 3, 4]"
+                                       data-slider-ticks-labels='["1核", "2核", "4核", "8核"]'
+                                       data-slider-min="1"
+                                       data-slider-max="4"
+                                       data-slider-step="1"
+                                       data-slider-value="4"
+                                       data-slider-tooltip="hide"/>
+                            </dd>
+                        </dl>
+
+                    </div>
+
+                    <div class="hdisk">
+                        <dl>
+                            <dd>
+                                <label>硬盘选择：</label>
+                                <select data-placeholder="选择硬盘大小" class="chosen-select-disk">
+                                    <option value="">-------选择硬盘大小-------</option>
+                                    <option value="40">40G</option>
+                                    <option value="60">60G</option>
+                                    <option value="80">80G</option>
+                                    <option value="100">100G</option>
+                                </select>
+                            </dd>
+                        </dl>
+                    </div>
+
+
+<!--                    <div class="password">-->
+<!--                        <dl>-->
+<!--                            <dd>-->
+<!--                                <label>虚拟机密码：</label>-->
+<!--                                <input type="password" class="ps"/>-->
+<!--                            </dd>-->
+<!--                        </dl>-->
+<!--                    </div>-->
+
+                    <!--<input type="button" class="subinput" value="立即申请" href="{% url 'vm:apply_vm' %}"/>-->
+                    <input type="button" class="subinput" value="立即申请"/>
+                </form>
+
+
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

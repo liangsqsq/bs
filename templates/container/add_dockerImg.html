@@ -1,0 +1,174 @@
+{% extends 'users/user-base.html' %}
+
+{% load static %}
+{% block title %}添加容器镜像{% endblock %}
+{% block custom_css %}
+    {#    <link href="css/domain.css" rel="stylesheet" title="" type="text/css"/>#}
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    function check_form(){
+        var message = "";
+        if($("#osVersion").val() == ""){
+            message = "操作系统不能为空";
+        }else if($("#img_name").val() == ""){
+            message = "镜像名称不能为空";
+        }else if($("#imgPort").val() == ""){
+            message = "暴漏端口不能为空";
+        }
+        if(message != ""){
+            $("#tipbody").text(message);
+            $("#tipModal").modal("show");
+            return ;
+        }
+        $("#imgForm").submit();
+    }
+</script>
+{% endblock %}
+
+{% block contentIMG %}
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">添加容器镜像</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item">镜像管理</li>
+                                            <li class="breadcrumb-item active" aria-current="page">添加容器镜像</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+
+                    <div class="row">
+                        <!-- ============================================================== -->
+                        <!-- basic table  -->
+                        <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card" style="background-color:#FFFFFF">
+                                <div class="card-body">
+                                    <form method="post" action="/container/add_dockerImg/" id="imgForm">
+                                            <div class="form-group row" style="padding-top:50px">
+                                                <label for="osVersion"
+                                                       class="col-12 col-sm-3 col-form-label text-right">底层操作系统</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="osVersion"
+                                                           id="osVersion"
+                                                           placeholder="底层操作系统">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="imgPath" class="col-12 col-sm-3 col-form-label text-right">镜像名称</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="img_name" id="img_name"
+                                                           placeholder="唯一镜像名称">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="imgPath" class="col-12 col-sm-3 col-form-label text-right">仓库名称</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="repository_name" id="repository_name"
+                                                           placeholder="REPOSITORY">
+                                                </div>
+                                            </div>
+                                       <div class="form-group row">
+                                                <label for="imgPath" class="col-12 col-sm-3 col-form-label text-right">标签</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="tag_name" id="tag_name"
+                                                           placeholder="TAG">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="isoPath"
+                                                       class="col-12 col-sm-3 col-form-label text-right">挂载点</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="mount_point" id="mount_point"
+                                                           placeholder="/qincloud/config;/qincloud/log 多个文件以英式分号隔开 可为空">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="imgPort" class="col-12 col-sm-3 col-form-label text-right">暴露端口</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="imgPort" id="imgPort"
+                                                           placeholder="22/3389/7001 ...多个端口以英式分号隔开 可为空">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="imgCommand" class="col-12 col-sm-3 col-form-label text-right">后台命令</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="imgCommand" id="imgCommand"
+                                                           placeholder="/home/qindun/run  多个命令以英式分号隔开 可为空">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="exampleInputBelong"
+                                                       class="col-12 col-sm-3 col-form-label text-right">所在服务器</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <select name="server" id="server">
+                                                        {% for server  in communication_list %}
+                                                            <option value="{{ server }}">{{ server }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="imgDomain" class="col-12 col-sm-3 col-form-label text-right">所在域</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <select name="imgDomain" id="imgDomain">
+                                                        {% for domain  in domain_list %}
+                                                            <option value="{{ domain.id }}">{{ domain.domain }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row text-right">
+                                                <div class="col col-sm-10 col-lg-9 offset-sm-1 offset-lg-0">
+                                                    <button type="button" class="btn btn-space btn-primary" onclick="check_form()">确认</button>
+                                                </div>
+                                            </div>
+                                            <p class="text-danger text-center">{{ message }}</p>
+                                        </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    $("#server").change(function (){
+        var server_ip = $("#server").val();
+        $.ajax({
+            type: "POST",
+            data: {
+                'server_ip': server_ip,
+            },
+            url: "/admins/get_domain_by_ip/",
+            success: function (data) {
+                console.log(data);
+                var domain_list = data['domain'];
+                var content = "";
+                for(var i=0; i<domain_list.length; i++){
+                    content += "<option value="+ domain_list[i].id +">" + domain_list[i].domain + "</option><br>"
+                }
+                $("#imgDomain").html(content);
+            }
+        })
+    })
+    </script>
+{% endblock %}

@@ -1,0 +1,193 @@
+<!doctype html>
+{% load static %}
+<html lang="zh">
+<head>
+    <title>Dragon Stack Cloud 注册</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="{% static 'css/style2.css' %}" rel='stylesheet' type='text/css'/>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link href="{% static 'css/validationEngine.jquery.css' %}" rel='stylesheet' type='text/css'/>
+    <style>
+        #regButton {
+            font-size: 1em;
+            color: #fff;
+            background: #2dde98;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            padding: 15px 10px;
+            -webkit-appearance: none;
+            width: 100%;
+            font-weight: 400;
+            transition: .5s all;
+            -webkit-transition: .5s all;
+            -moz-transition: .5s all;
+            -o-transition: .5s all;
+            -ms-transition: .5s all;
+            text-transform: uppercase;
+            margin-top: 1.3em;
+            font-family: 'Rationale', sans-serif;
+        }
+        #regButton:hover{
+             font-size: 1em;
+            color: #fff;
+            background: #f2545f;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            padding: 15px 10px;
+            -webkit-appearance: none;
+            width: 100%;
+            font-weight: 400;
+            transition: .5s all;
+            -webkit-transition: .5s all;
+            -moz-transition: .5s all;
+            -o-transition: .5s all;
+            -ms-transition: .5s all;
+            text-transform: uppercase;
+            margin-top: 1.3em;
+            font-family: 'Rationale', sans-serif;
+        }
+        #verButton {
+            font-size: 1em;
+            color: #fff;
+            background: #2dde98;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            padding: 15px 10px;
+            -webkit-appearance: none;
+            width: 100%;
+            font-weight: 400;
+            transition: .5s all;
+            -webkit-transition: .5s all;
+            -moz-transition: .5s all;
+            -o-transition: .5s all;
+            -ms-transition: .5s all;
+            text-transform: uppercase;
+            margin-top: 1.3em;
+            font-family: 'Rationale', sans-serif;
+        }
+    </style>
+    <!-- js -->
+    <script>window.jQuery || document.write('<script src="{% static 'js/jquery-2.1.1.min.js' %}"><\/script>')</script>
+    <script src="{% static 'js/jquery.validationEngine.js' %}"></script>
+    <script src="{% static 'js/jquery.validationEngine.min.js' %}"></script>
+    <script src="{% static 'js/vidbg.js' %}"></script>
+    <script src="{% static 'js/jquery.form.js' %}"></script>
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $('body').vidbg({
+                'mp4': "{% static 'images/mp4.mp4'%}",
+            }, {
+                // Options
+                muted: true,
+                loop: true,
+                overlay: true,
+            });
+        });
+        jQuery(document).ready(function () {
+            jQuery("#regForm").validationEngine({scroll: false});
+
+            $("#regButton").click(function () {
+                if (!$("form#regForm").validationEngine("validate")) return;
+                var username = $("#id_username").val();
+                var realname = $("#id_realname").val();
+                var password = $("#id_password2").val();
+                var email = $("#id_email").val();
+                var emailcode = $("#id_code").val();
+
+                $.ajax({
+                    type: "POST",
+                    data: {'username': username,'realname':realname, 'password': password, 'email': email,'emailcode':emailcode},
+                    url: "{% url 'users:regist' %}",
+                    success: function (data) {
+                        console.log(data)
+                        if (data["st"] == 1) {
+                            alert("注册成功")
+                           window.location.href = "{% url 'index' %}";
+                        }
+                        if (data["st"] == 0) {
+                            alert("注册失败")
+                        }
+
+                    },
+                    error: function () {
+                      alert("false");
+                    }
+                })
+            })
+            $("#verButton").click(function (){
+                var email = $("#id_email").val();
+                $.ajax({
+                    type:"POST",
+                    data:{'email': email},
+                    url:"{% url 'users:useremail' %}",
+                    success:function (data) {
+                        console.log(data)
+                        if (data["st"] == 1) {
+                            alert("验证码已发送")
+                        }
+                    },
+                     error: function () {
+                      alert("false");
+                    }
+                })
+            })
+        })
+    </script>
+</head>
+<body>
+<div class="contain">
+    <h1><a href="{% url 'index' %}" style="color:white">DragonStack Cloud</a></h1>
+    <div class="main">
+
+
+        <div class="login-top left">
+            <div class="social_icons">
+                <div class="w3-signup-head-top">
+                    <h3>注册</h3>
+                </div>
+
+            </div>
+
+            <form  method="post" id="regForm">
+
+               <input type="text" id="id_username" name="username"
+                       class="name validate[required,custom[LetterNumberunder],maxSize[20],ajax[ajaxNameCall]]"
+                       placeholder="用户名">
+
+              <input type="text"  name="id_realname" id="id_realname" onkeyup="this.value=this.value.replace(/[^\u4e00-\u9fa5]/g,'')"
+                       class="name " placeholder="姓名">
+
+                <input type="text" id="id_email" name="email" class="email validate[required,custom[email]"
+                       placeholder="邮箱地址">
+                <input type="button" value="获取验证码" id="verButton" name="verButton">
+                <input type="text" id="id_code" name="id-code"
+                       placeholder="验证码">
+                <input type="password" id="id_password1" name="password1"
+                       class="password validate[required,minSize[6],maxSize[20]]" placeholder="设置密码">
+
+                <input type="password" id="id_password2" name="password2"
+                       class="password validate[required,equals[id_password1]]" placeholder="确认密码">
+
+                <input type="button" value="注册" id="regButton" name="regButton">
+            </form>
+            <div class="w3-bottom-text">
+                <h3><a href="{% url 'users:login' %}">已有账号<span>?</span></a></h3>
+                <h4><a href="{% url 'users:login' %}">登录</a></h4>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+
+    </div>
+    <div class="clear"></div>
+    <div class="copy-right w3l-agile">
+        <p>Copyright © 2017 Provincial Key Laboratory of Network and System Security, Xidian University, Shaanxi
+            Province, China.</p>
+    </div>
+</div>
+
+</body>
+</html>

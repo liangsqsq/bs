@@ -1,0 +1,7 @@
+<domainsnapshot>
+    <name>snapshotName</name>
+    <disks>
+      <disk name='diskPath'>
+      </disk>
+    </disks>
+</domainsnapshot>

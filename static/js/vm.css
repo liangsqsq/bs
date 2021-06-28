@@ -1,0 +1,57 @@
+.seladd table {
+
+    margin-right: 3px ;
+    width:20px;
+}
+tr{
+
+    margin-right:3px;
+}
+td{
+    padding:6px;
+
+}
+span{
+    float: left;
+    padding-top:23px;
+}
+input{
+    width:150px;
+    height:50px;
+    line-height:32px;
+    background: repeat-x bottom;
+    border:1px solid #d3d3d3;
+    cursor:pointer;
+
+}
+input:hover{
+    border-color:#00acee;
+
+}
+.after{
+    background-color: #00acee;
+    color: white;
+}
+.mis{
+    width:50px;
+}
+.div1{
+
+    background-color: pink;
+    width:992px;
+    height:30px;
+}
+
+.div1 table{
+    padding: 0px;
+    margin: 0px;
+}
+.div1 td{
+    width:70px;
+}
+
+.div2{
+    width:992px;
+    height:562px;
+
+}

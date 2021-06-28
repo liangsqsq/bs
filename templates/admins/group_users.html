@@ -1,0 +1,219 @@
+{% extends 'users/user-base.html' %}
+
+{% load static %}
+{% block title %}组成员{% endblock %}
+{% block custom_css %}
+    {#    <link href="css/domain.css" rel="stylesheet" title="" type="text/css"/>#}
+    <style>
+        td{
+            vertical-align:middle !important;
+        }
+    </style>
+{% endblock %}
+
+{% block custom_js %}{% endblock %}
+
+{% block contentUser %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#tab").on("click", ":button", function (event) {
+                var btn_id = $(this).attr('id');
+                var username = $(this).closest("tr").find("td").eq(1).text();
+                if (btn_id == 'lockuser') {
+                    $.ajax({
+                        type: "POST",
+                        data: {'username': username,'action':btn_id},
+                        url: "/admins/user_manage/",
+                        success: function (data) {
+                            window.location.reload();
+                        },
+                        error: function () {
+                            alert("unknown error");
+                        }
+                    })
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        data: {'username': username,'action':btn_id},
+                        url: "/admins/user_manage/",
+                        success: function (data) {
+                            window.location.reload();
+                        },
+                        error: function () {
+                            alert("unknown error");
+                        }
+                    })
+                }
+            });
+        })
+    </script>
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">组成员</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item">用户管理</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">组成员</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+
+                    <div class="row">
+                        <!-- ============================================================== -->
+                        <!-- basic table  -->
+                        <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered first" id="tab">
+                                            <thead>
+                                            <tr>
+                                                <th >ID</th>
+                                                <th >用户名</th>
+                                                <th >姓名</th>
+                                                <th >邮箱</th>
+                                                <th >用户组</th>
+                                                <th >注册时间</th>
+                                                <th >上次登录</th>
+                                                <th >管理员</th>
+                                                <th >状态</th>
+                                                <th >操作</th>
+                                            </tr>
+                                            </thead>
+                                            {% for user in users %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td><a href="#">{{ user.username }}</a></td>
+                                                    <td>{{ user.realname }}</td>
+                                                    <td>{{ user.email }}</td>
+                                                    <td>{{ user.group_type }}</td>
+                                                    <td>{{ user.date_joined }}</td>
+                                                    <td>{{ user.last_login }}</td>
+                                                    {% if user.is_superuser == 1 %}
+                                                        <td>是</td>
+                                                    {% else %}
+                                                        <td>否</td>
+                                                    {% endif %}
+                                                    {% if user.is_active == 1 %}
+                                                        <td>正常</td>
+                                                        <td>
+                                                            <button type="button" id="lockuser" class="btn btn-danger">
+                                                                <span class="glyphicon glyphicon-trash"></span>
+                                                                删除
+                                                            </button>
+                                                        </td>
+                                                    {% else %}
+                                                        <td>已删除</td>
+                                                        <td>
+                                                            <button type="button" id="unlockuser" class="btn btn-success">
+                                                                <span class="glyphicon glyphicon-refresh"></span>
+                                                                恢复
+                                                            </button>
+                                                        </td>
+                                                    {% endif %}
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                        {% if users.paginator.num_pages > 1%}
+                                            <nav aria-label="Page navigation example">
+                                                <ul class="pagination pull-right" style="padding-right: 50px;">
+                                                    {% if users.number == 1 %}
+                                                        <li class="disabled page-item">
+                                                            <a aria-label="First" class="page-link">
+                                                                <span aria-hidden="true">&laquo;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="page-item">
+                                                            <a href="{% url 'admins:show_users' 1 %}" aria-label="First" class="page-link">
+                                                                <span aria-hidden="true">&laquo;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% endif %}
+                                                    {% if users.has_previous %}
+                                                        <li class="page-item">
+                                                            <a href="{% url 'admins:show_users' users.previous_page_number %}" aria-label="Previous" class="page-link">
+                                                                <span aria-hidden="true">&lt;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="disabled page-item">
+                                                            <a aria-label="Previous" class="page-link">
+                                                                <span aria-hidden="true">&lt;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% endif %}
+                                                    {% for num in display_list %}
+                                                        {% if users.number == num %}
+                                                            <li class="active page-item">
+                                                                <a class="page-link">
+                                                                    <span aria-hidden="true">{{num}}</span>
+                                                                </a>
+                                                            </li>
+                                                        {% else %}
+                                                            <li class="page-item">
+                                                                <a href="{% url 'admins:show_users' num %}" class="page-link">
+                                                                    <span aria-hidden="true">{{num}}</span>
+                                                                </a>
+                                                            </li>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if users.has_next %}
+                                                        <li class="page-item">
+                                                            <a href="{% url 'admins:show_users' users.next_page_number %}" aria-label="Next" class="page-link">
+                                                                <span aria-hidden="true">&gt;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="disabled page-item">
+                                                            <a aria-label="Next" class="page-link">
+                                                                <span aria-hidden="true">&gt;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% endif %}
+                                                    {% if users.number == users.paginator.num_pages %}
+                                                        <li class="disabled page-item">
+                                                            <a aria-label="Last" class="page-link">
+                                                                <span aria-hidden="true">&raquo;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="page-item">
+                                                            <a href="{% url 'admins:show_users' users.paginator.num_pages %}" aria-label="Last" class="page-link">
+                                                                <span aria-hidden="true">&raquo;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% endif %}
+                                                    <span class="total" style="line-height: 30px; margin-left: 10px;">
+                                                        共有{{users.paginator.count}}条记录
+                                                    </span>
+                                                </ul>
+                                            </nav>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+{% endblock %}

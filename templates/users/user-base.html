@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+
+    <title>{% block title %}控制台{% endblock %}</title>
+    <meta charset="UTF-8">
+
+    {% block custom_css %}{% endblock %}
+     <link href="{% static 'css/bootstrap.min.css' %}" title="" rel="stylesheet"/>
+    <link title="" href="{% static 'css/userinfo.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/dermadefault.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/templatecss.css' %}" rel="stylesheet" title="" type="text/css"/>
+    <link href="{% static 'css/userctrl.css' %}" rel="stylesheet" title="" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'css/modal.css' %}">
+    <link href="{% static 'vendor/fonts/circular-std/style.css' %}" title="" rel="stylesheet"/>
+    <link href="{% static 'vendor/fonts/fontawesome/css/fontawesome-all.css' %}" title="" rel="stylesheet"/>
+    <link href="{% static 'vendor/charts/chartist-bundle/chartist.css' %}" title="" rel="stylesheet"/>
+    <link href="{% static 'vendor/charts/morris-bundle/morris.css' %}" title="" rel="stylesheet"/>
+    <link href="{% static 'vendor/fonts/material-design-iconic-font/css/materialdesignicons.min.css' %}" title=""
+          rel="stylesheet"/>
+    <link href="{% static 'vendor/charts/c3charts/c3.css' %}" title="" rel="stylesheet"/>
+    <link href="{% static 'libs/css/style.css' %}" title="" rel="stylesheet"/>
+    <link href="{% static 'vendor/fonts/flag-icon-css/flag-icon.min.css' %}" title="" rel="stylesheet"/>
+
+    <script src="{% static 'js/jquery.js' %}"></script>
+
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendor/slimscroll/jquery.slimscroll.js' %}" type="text/javascript"></script>
+    <script src="{% static 'libs/js/main-js.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendor/charts/chartist-bundle/chartist.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendor/charts/sparkline/jquery.sparkline.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendor/charts/morris-bundle/raphael.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendor/charts/morris-bundle/morris.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendor/charts/c3charts/c3.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendor/charts/c3charts/d3-5.4.0.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'vendor/charts/c3charts/C3chartjs.js' %}" type="text/javascript"></script>
+    <script src="{% static 'libs/js/dashboard-ecommerce.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/zabbix_api.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/Lunbo.js' %}"></script>
+    <script src="{% static 'js/echarts.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/jquery.cookie.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/userctrl.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/modal.min.js' %}"></script>
+    <script src="{% static 'js/mTips.js' %}"></script>
+    {% block custom_js %}{% endblock %}
+    <script>
+        $(function () {
+            var count = $("#user_ul li").length
+            if(count == 4){
+                $.ajax({
+                    url:"/admins/get_count/",
+                    type:"POST",
+                    dataType:"json",
+                    contentType:"application/json;charset=utf-8",
+                    success:function (data) {
+                        if(data["new_vm_apply_count"]!=0){
+                            $("#apply_vms").text(data["new_vm_apply_count"]);
+                        }
+                        if(data["vm_deploy_apply_count"]!=0){
+                            $("#apply_settings").text(data["vm_deploy_apply_count"]);
+                        }
+                        if(data["vm_port_apply_count"]){
+                            $("#apply_ports").text(data["vm_port_apply_count"]);
+                        }
+                        if(data['new_container_apply_count']){
+                            $("#docker_verifys").text(data("new_container_apply_count"))
+                        }
+                    },
+                })
+            }
+        })
+    </script>
+</head>
+<body>
+<nav class="nav navbar-default navbar-mystyle navbar-fixed-top">
+    <div class="navbar-header">
+        <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand mystyle-brand" href="{% url 'index' %}"><span
+                class="glyphicon glyphicon-home"></span></a></div>
+    <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li class="li-border"><a class="mystyle-color" href="{% url 'users:usercontrol' %}">管理控制台</a></li>
+            <li class="dropdown li-border"><a href="#" class="dropdown-toggle mystyle-color" data-toggle="dropdown">产品与服务<span
+                    class="caret"></span></a>
+                <!----下拉框选项---->
+                <div class="dropdown-menu topbar-nav-list">
+                    <div class="topbar-nav-col">
+                        <div class="topbar-nav-item">
+                            <p class="topbar-nav-item-title">弹性计算</p>
+                            <ul>
+                                <li><a href="{% url 'vm:virtualhost' %}">
+                                    <span class="glyphicon glyphicon-cloud"></span>
+                                    <span class="">虚拟云服务</span>
+                                </a>
+                                </li>
+                                <li><a href="{% url 'container:dockerselect' %}">
+                                    <span class="glyphicon glyphicon-bed"></span>
+                                    <span class="">容器服务</span>
+                                </a>
+                                </li>
+<!--                                <li><a href="http://222.25.188.1:50157/index/">-->
+<!--                                    <span class="glyphicon glyphicon-th"></span>-->
+<!--                                    <span class="">计算集群</span>-->
+<!--                                </a>-->
+<!--                                </li>-->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+        <ul class="nav navbar-nav pull-right" style="padding-right:20px">
+
+
+            <li class="dropdown li-border"><a href="{% url 'users:user_info' %}" class="dropdown-toggle mystyle-color"
+                                              data-toggle="dropdown" id="user_id">{{ user.username }}<span class="caret"></span></a>
+                <ul class="dropdown-menu topbar-nav-list" id="user_ul">
+                    {% if user.is_superuser == 1 %}
+                        <li><a href="{% url 'admins:vm_recy' 1%}">
+                            <i class="fas fa-cog mr-2"></i>
+                            后台管理</a></li>
+<!--                        <li><a href="{% url 'users:user_info' %}">-->
+<!--                            <i class="fas fa-user mr-2"></i>-->
+<!--                            账号信息</a></li>-->
+                        <li><a href="{% url 'users:logout' %}">
+                            <i class="fas fa-power-off mr-2"></i>
+                            退出</a></li>
+                    {% else %}
+<!--                        <li><a href="{% url 'users:user_info' %}">-->
+<!--                            <i class="fas fa-user mr-2"></i>-->
+<!--                            账号信息</a></li>-->
+                        <li><a href="{% url 'users:logout' %}">
+                            <i class="fas fa-power-off mr-2"></i>
+                            退出</a></li>
+                    {% endif %}
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+</nav>
+<div class="down-main">
+    <div class="left-main left-full">
+        <div class="sidebar-fold"><span class="glyphicon glyphicon-menu-hamburger"></span></div>
+        <div class="subNavBox">
+            <div class="sBox">
+{#                <a href="{% url 'admins:show_domain' %}">#}
+{#                    <div class="subNav active"><span class="title-icon glyphicon glyphicon-list"></span><span#}
+{#                            class="sublist-title">平台资源管理</span>#}
+{#                    </div>#}
+{#                </a>#}
+
+                <div class="subNav sublist-down">
+                    <span class="sublist-icon glyphicon glyphicon-chevron-down"></span>
+                    <span class="sub-title">虚拟机设置</span>
+                </div>
+                <ul class="navContent" style="display:block">
+
+                    <li>
+                        <div class="showtitle" style="width:100px;">虚拟机管理</div>
+                        <a href="{% url 'admins:vm_recy' 1%}">
+                            <span>&nbsp;&nbsp;</span>
+                            <span class="sublist-icon glyphicon glyphicon-cog"></span>
+                            <span class="sublist-title">虚拟机管理</span></a>
+                    </li>
+<!--                     <li>-->
+<!--                        <div class="showtitle" style="width:100px;">快照管理</div>-->
+<!--                        <a href="{% url 'admins:snapshot_manage' %}">-->
+<!--                            <span>&nbsp;&nbsp;</span>-->
+<!--                            <span class="sublist-icon fa fa-camera"></span>-->
+<!--                            <span class="sublist-title">快照管理</span></a>-->
+<!--                    </li>-->
+                    <li>
+                        <!-- <div class="showtitle" style="width:100px;">虚拟机审核</div> -->
+                        <a href="{% url 'admins:apply_vm' 1 %}">
+                            <span>&nbsp;&nbsp;</span>
+                            <span class="sublist-icon glyphicon glyphicon-check"></span>
+                            <span class="sublist-title">虚拟机审核</span>
+                            <span class="label label-info" id="apply_vms"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <!-- <div class="showtitle" style="width:100px;">配置审核</div> -->
+                        <a href="{% url 'admins:apply_setting' 1 %}">
+                            <span>&nbsp;&nbsp;</span>
+                            <span class="sublist-icon glyphicon glyphicon-check"></span>
+                            <span class="sublist-title">配置审核</span>
+                            <span class="label label-info" id="apply_settings"></span>
+                        </a>
+                    </li>
+<!--                    <li>-->
+<!--                        &lt;!&ndash; <div class="showtitle" style="width:100px;">端口审核</div> &ndash;&gt;-->
+<!--                        <a href="{% url 'admins:apply_port' 1%}">-->
+<!--                            <span>&nbsp;&nbsp;</span>-->
+<!--                            <span class="sublist-icon glyphicon glyphicon-check"></span>-->
+<!--                            <span class="sublist-title">端口审核</span>-->
+<!--                            <span class="label label-info" id="apply_ports"></span>-->
+<!--                        </a>-->
+<!--                    </li>-->
+
+                    <li>
+                        <!-- <div class="showtitle" style="width:100px;">端口审核</div> -->
+                        <a href="{% url 'container:docker_verify' 1%}">
+                            <span>&nbsp;&nbsp;</span>
+                            <span class="sublist-icon glyphicon glyphicon-check"></span>
+                            <span class="sublist-title">容器审核</span>
+                            <span class="label label-info" id="docker_verifys"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <!-- <div class="showtitle" style="width:100px;">端口审核</div> -->
+                        <a href="{% url 'container:container_manage' 1%}">
+                            <span>&nbsp;&nbsp;</span>
+                            <span class="sublist-icon glyphicon glyphicon-cog"></span>
+                            <span class="sublist-title">容器管理</span>
+                            <span class="label label-info" id="container_manage"></span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="subNav sublist-down">
+                    <span class="sublist-icon glyphicon glyphicon-chevron-down"></span>
+                    <span class="sub-title">域管理</span>
+                </div>
+                <ul class="navContent" style="display:block">
+
+                    <li>
+                        <div class="showtitle" style="width:100px;">添加域</div>
+                        <a href="{% url 'admins:add_domain' %}">
+                            <span>&nbsp;&nbsp;</span>
+                            <span class="sublist-icon glyphicon glyphicon-cloud-upload"></span>
+                            <span class="sublist-title">添加域</span></a>
+                    </li>
+                    <li>
+                        <div class="showtitle" style="width:100px;">添加服务节点</div>
+                        <a href="{% url 'admins:add_workstation' %}">
+                            <span>&nbsp;&nbsp;</span>
+                            <span class="sublist-icon glyphicon glyphicon-cloud-upload"></span>
+                            <span class="sublist-title">添加服务节点</span></a>
+                    </li>
+                    <li>
+                        <div class="showtitle" style="width:100px;">添加容器节点</div>
+                        <a href="{% url 'container:add_dockerNode' %}">
+                            <span>&nbsp;&nbsp;</span>
+                            <span class="sublist-icon glyphicon glyphicon-cloud-upload"></span>
+                            <span class="sublist-title">添加容器节点</span></a>
+                    </li>
+                    <li>
+                        <div class="showtitle" style="width:100px;">节点审核</div>
+                        <a href="{% url 'admins:apply_node' %}">
+                            <span>&nbsp;&nbsp;</span>
+                            <span class="sublist-icon glyphicon glyphicon-check"></span>
+                            <span class="sublist-title">节点审核</span></a>
+                    </li>
+                    <li>
+                        <div class="showtitle" style="width:100px;">级联审核</div>
+                        <a href="{% url 'admins:cascade_apply' %}">
+                            <span>&nbsp;&nbsp;</span>
+                            <span class="sublist-icon glyphicon glyphicon-check"></span>
+                            <span class="sublist-title">级联审核</span></a>
+                    </li>
+                    <li>
+                        <div class="showtitle" style="width:100px;"> 现有域</div>
+                        <a href="{% url 'admins:existing_domain' %}">
+                            <span>&nbsp;&nbsp;</span>
+                            <span class="sublist-icon glyphicon glyphicon-search"></span>
+                            <span class="sublist-title">现有域</span></a>
+                    </li>
+
+
+                </ul>
+<!--                <div class="subNav sublist-down">-->
+<!--                    <span class="sublist-icon glyphicon glyphicon-chevron-down"></span>-->
+<!--                    <span class="sub-title">用户管理</span>-->
+<!--                </div>-->
+<!--                <ul class="navContent" style="display:block">-->
+<!--                    <li>-->
+<!--                        <div class="showtitle" style="width:100px;">用户管理</div>-->
+<!--                        <a href="{% url 'admins:show_users' 1%}">-->
+<!--                            <span>&nbsp;&nbsp;</span>-->
+<!--                            <span class="sublist-icon glyphicon glyphicon-user"></span>-->
+<!--                            <span class="sublist-title">用户管理</span></a>-->
+<!--                    </li>-->
+
+<!--                    <li>-->
+<!--                        <div class="showtitle" style="width:100px;">现有分组</div>-->
+<!--                        <a href="{% url 'admins:group_list' %}">-->
+<!--                            <span>&nbsp;&nbsp;</span>-->
+<!--                            <span class="sublist-icon glyphicon glyphicon-search"></span>-->
+<!--                            <span class="sublist-title">现有分组</span></a>-->
+<!--                    </li>-->
+<!--                </ul>-->
+                <div class="subNav sublist-down">
+                    <span class="sublist-icon glyphicon glyphicon-chevron-down"></span>
+                    <span class="sub-title">镜像管理</span>
+                </div>
+                <ul class="navContent" style="display:block">
+                    <li>
+                        <div class="showtitle" style="width:100px;">添加镜像</div>
+                        <a href="{% url 'admins:add_img' %}">
+                            <span>&nbsp;&nbsp;</span>
+                            <span class="sublist-icon glyphicon  glyphicon-circle-arrow-up"></span>
+                            <span class="sublist-title">添加镜像</span></a>
+                    </li>
+                    <li>
+                        <div class="showtitle" style="width:100px;">添加容器镜像</div>
+                        <a href="{% url 'container:add_dockerImg' %}">
+                            <span>&nbsp;&nbsp;</span>
+                            <span class="sublist-icon glyphicon  glyphicon-circle-arrow-up"></span>
+                            <span class="sublist-title">添加容器镜像</span></a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="close-main" style="display: none" id="div_close">
+        <button type="button" class="btn" id="btn_close">
+            <span class="glyphicon glyphicon-menu-hamburger"></span>
+        </button>
+    </div>
+
+
+    {% block contentVMapply %}{% endblock %}
+    {% block contentVMrecy %}{% endblock %}
+    {% block contentNodeapply %}{% endblock %}
+    {% block contentVMset %}{% endblock %}
+    {% block contentVMport %}{% endblock %}
+    {% block content3 %}{% endblock %}
+    {% block contentdomain %}{% endblock %}
+    {% block contentworkstation %}{% endblock %}
+    {% block contentIMG %}{% endblock %}
+    {% block contentUser %}{% endblock %}
+
+</div>
+    <div class="modal fade" id="tipModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">提示</h4>
+                </div>
+                <div class="modal-body" id="tipbody"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="tipButton">关闭</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="modal fade" id="barModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">进度</h4>
+                </div>
+                <div class="modal-body" id="bar-body">
+                    <div class="text-center" id="bar-text"></div>
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar bg-success" style="width: 0%;" id="div-bar"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="btn-bar">关闭</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="modal fade" id="AddGroupModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">添加分组</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="ibox-content">
+                        <div>
+                            <p style="color: red;"></p>
+                            <div>
+                                <div class="from-group row">
+                                    <label class="col-sm-2 col-form-label" style="margin-top: 5px; text-align: center;">组名</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="group_name" placeholder="请输入组名">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="tipButton">关闭</button>
+                    <button type="button" class="btn btn-success" id="agreeAddGroup">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="modal fade" id="AddMembersModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">添加用户</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="ibox-content">
+                        <div>
+                            <p style="color: red;"></p>
+                            <div>
+                                <div class="from-group row">
+                                    <label class="col-sm-2 col-form-label" style="margin-top: 5px; text-align: center;">用户ID</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="members_id" placeholder="请输入用户ID">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="tipButton">关闭</button>
+                    <button type="button" class="btn btn-success" id="agreeAddMembers">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="modal fade" id="ChangeInfoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">修改信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="ibox-content">
+                        <div>
+                            <p style="color: red;"></p>
+                            <div>
+                                <div class="from-group row">
+                                    <label class="col-sm-3 col-form-label" style="margin-top: 5px; text-align: center;">用户名</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="change_username" placeholder="请输入用户名">
+                                    </div>
+                                </div>
+                                <div class="from-group row">
+                                    <label class="col-sm-3 col-form-label" style="margin-top: 5px; text-align: center;">电子邮箱</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="change_email" placeholder="请输入电子邮箱">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="tipButton">关闭</button>
+                    <button type="button" class="btn btn-success" id="agreeChangeInfo">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="modal fade" id="ChangePwdModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">修改密码</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="ibox-content">
+                        <div>
+                            <p style="color: red;"></p>
+                            <div>
+                                <div class="from-group row">
+                                    <label class="col-sm-3 col-form-label" style="margin-top: 5px; text-align: center;">原密码</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="old_pwd" placeholder="请输入原密码">
+                                    </div>
+                                </div>
+                                <div class="from-group row">
+                                    <label class="col-sm-3 col-form-label" style="margin-top: 5px; text-align: center;">新密码</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="new_pwd" placeholder="请输入新密码">
+                                    </div>
+                                </div>
+                                <div class="from-group row">
+                                    <label class="col-sm-3 col-form-label" style="margin-top: 5px; text-align: center;">确认新密码</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="confirm_pwd" placeholder="请输入确认密码">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="tipButton">关闭</button>
+                    <button type="button" class="btn btn-success" id="agreeChangePwd">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+{% block content %}{% endblock %}
+{% block content2 %}{% endblock %}
+
+
+</body>
+
+</html>

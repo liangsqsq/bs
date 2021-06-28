@@ -1,0 +1,272 @@
+{% extends 'users/user-base.html' %}
+
+{% load static %}
+{% block title %}节点审核{% endblock %}
+{% block custom_css %}
+    <style>
+        td{
+            vertical-align:middle !important;
+        }
+    </style>
+{% endblock %}
+
+{% block custom_js %}{% endblock %}
+
+{% block contentNodeapply %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#tab").on("click", ":button", function (event) {
+                var btn_id = $(this).attr('id');
+                var node_id = $(this).closest("tr").find("td").eq(0).text();
+                var node_ip = $(this).closest("tr").find("td").eq(2).text();
+                if (btn_id == 'apply_node') {
+                    var server_ip = document.getElementById(node_id+"_server").value;
+                    var ssh = document.getElementById(node_id+"_ssh").value;
+                    var user = document.getElementById(node_id + "_user").value;
+                    var pwd = document.getElementById(node_id+"_pwd").value;
+                    var home_dir = document.getElementById(node_id+"_homedir").value;
+                    var select_domain = document.getElementById(node_id+"_domain");
+                    var domain_value = select_domain.options[select_domain.selectedIndex].value;
+                    var select_type = document.getElementById("node_type");
+                    var type_value = select_type.options[select_type.selectedIndex].value;
+                    if (ssh == ""){
+                        $("#tipbody").text("请填写端口号");
+                        $("#tipModal").modal("show");
+                        return ;
+                    }else if (user == ""){
+                        $("#tipbody").text("请填写用户名");
+                        $("#tipModal").modal("show");
+                        return ;
+                    }else if (pwd == ""){
+                        $("#tipbody").text("请填写密码");
+                        $("#tipModal").modal("show");
+                        return ;
+                    }else if (home_dir == ""){
+                        $("#tipbody").text("请填写用户主目录");
+                        $("#tipModal").modal("show");
+                        return ;
+                    }else if (domain_value == "0"){
+                        $("#tipbody").text("请选择所在域");
+                        $("#tipModal").modal("show");
+                        return ;
+                    }else if (type_value == "0"){
+                        $("#tipbody").text("请选择节点类型");
+                        $("#tipModal").modal("show");
+                    }
+                    console.log(type_value);
+                    $.ajax({
+                        type: "POST",
+                        data: {
+                            "ip": node_ip,
+                            "ssh": ssh,
+                            "user": user,
+                            "pwd": pwd,
+                            "home_dir": home_dir,
+                            "domain": domain_value,
+                            "node_type": type_value,
+                            "server_ip": server_ip,
+                        },
+                        url: "/admins/agree_zabbix_node/",
+                        success: function (data) {
+                            if (data["st"] == 1) {
+                                $("#tipbody").text("同意申请");
+                                $("#tipModal").modal("show");
+                                $("#tipButton").bind("click", function(){
+                                    window.location.reload();
+                                })
+                            }else{
+                                $("#tipbody").text("申请失败，请请重新确定信息");
+                                $("#tipModal").modal("show");
+                            }
+                        },
+                        error: function () {
+                            $("#tipbody").text("申请失败，请请重新确定信息");
+                            $("#tipModal").modal("show");
+                        }
+                    })
+                }else if (btn_id == "apply_reload"){
+                    $.ajax({
+                        type: "POST",
+                        data: {
+                            "node_ip": node_ip,
+                        },
+                        url: "/admins/apply_reload/",
+                        success: function (data) {
+                            if (data["st"] == 1) {
+                                $("#tipbody").text("重新加载成功");
+                                $("#tipModal").modal("show");
+                                $("#tipButton").bind("click", function(){
+                                    window.location.reload();
+                                })
+                            }else{
+                                $("#tipbody").text("重新加载失败");
+                                $("#tipModal").modal("show");
+                            }
+                        },
+                        error: function () {
+                            $("#tipbody").text("重新加载失败");
+                            $("#tipModal").modal("show");
+                        }
+                    })
+                }
+            });
+        })
+    </script>
+
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">节点审核</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item">节点审核</li>
+                                            <li class="breadcrumb-item active" aria-current="page">节点审核</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+
+                    <div class="row">
+                        <!-- ============================================================== -->
+                        <!-- basic table  -->
+                        <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered first" id="tab">
+                                            <thead>
+                                            <tr>
+                                                <th >ID</th>
+                                                <th >节点名称</th>
+                                                <th >IP</th>
+                                                <th >SSH端口</th>
+                                                <th >用户名</th>
+                                                <th >密码</th>
+                                                <th >用户主目录</th>
+                                                <th>所在服务器</th>
+                                                <th >所在域</th>
+                                                <th>节点类型</th>
+                                                <th>申请时间</th>
+                                                <th>操作</th>
+                                            </tr>
+                                            </thead>
+                                            <form id="node_apply_form">
+                                                {% for apply in apply_nodes %}
+                                                    <tr>
+                                                        <td>{{ forloop.counter }}</td>
+                                                        <td>{{ apply.host_name }}</td>
+                                                        <td>{{ apply.ip }}</td>
+                                                        {% ifequal apply.ssh_port None %}
+                                                        <td>
+                                                            <input type="text" id={{ forloop.counter }}_ssh placeholder="请填写端口号">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" id={{ forloop.counter }}_user placeholder="请填写用户名">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" id={{ forloop.counter }}_pwd placeholder="请填写密码">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" id={{ forloop.counter }}_homedir placeholder="请填写用户主目录">
+                                                        </td>
+                                                        {% else %}
+                                                        <td>
+                                                            <input type="text" id={{ forloop.counter }}_ssh placeholder="请填写端口号", value={{ apply.ssh_port }}>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" id={{ forloop.counter }}_user placeholder="请填写用户名" value={{ apply.user }}>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" id={{ forloop.counter }}_pwd placeholder="请填写密码" value={{ apply.pwd }}>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" id={{ forloop.counter }}_homedir placeholder="请填写用户主目录" value={{ apply.home_dir }}>
+                                                        </td>
+                                                        {% endifequal %}
+                                                        <td>
+                                                            <select name={{ forloop.counter }}_server id={{ forloop.counter }}_server class='server'>
+                                                                <option value="0">请选择服务器</option>
+                                                                {% for server in server_list %}
+                                                                <option value={{ server }}>{{ server }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </td>
+
+                                                        <td>
+                                                            <select name={{ forloop.counter }}_domain id={{ forloop.counter }}_domain>
+                                                                <option value="0">请选择所在域</option>
+                                                                {% for domain in domains %}
+                                                                <option value={{ domain }}>{{ domain }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select name="node_type" id="node_type">
+                                                                <option value="0">请选择节点类型</option>
+                                                                <option value="workstation">服务节点</option>
+                                                                <option value="docker">容器节点</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>{{ apply.deploy_time }}</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-success" id="apply_node">
+                                                                <span class="glyphicon glyphicon-ok"></span>
+                                                                同意
+                                                            </button>
+                                                            <button type="button" class="btn btn-warning" id="apply_reload">
+                                                                <span class="glyphicon glyphicon-download"></span>
+                                                                重新加载
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </form>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script>
+        $(".server").change(function (){
+            var server_ip = $(this).val();
+            var server_id = $(this).closest("tr").find("td").eq(0).text();
+            $.ajax({
+                type: "POST",
+                data: {
+                    'server_ip': server_ip,
+                },
+                url: "/admins/get_domain_by_ip/",
+                success: function (data) {
+                    var domain_list = data['domain'];
+                    var domain_id = server_id + "_domain";
+                    var content = '<option value="0">请选择所在域</option>';
+                    var domain_obj = document.getElementById(domain_id);
+                    domain_obj.innerHTML = content;
+                    for (var i=0; i<domain_list.length; i++){ 
+                        domain_obj.innerHTML += "<option value=" + domain_list[i].domain  + '>' + domain_list[i].domain + '</option>';
+                    }
+                }
+            })
+        });
+    </script>
+
+
+
+{% endblock %}

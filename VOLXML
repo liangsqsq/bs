@@ -1,0 +1,12 @@
+<volume>
+  <name>VOLUME_NAME</name>
+  <capacity unit="G">DISK_SIZE</capacity>
+  <target>
+    <path>VOLUME_PATH</path>
+    <format type='qcow2'/>
+    <permissions>
+      <mode>0766</mode>
+      <label>virt_image_t</label>
+    </permissions>
+  </target>
+</volume>

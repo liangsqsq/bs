@@ -1,0 +1,396 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+<!-- =========================
+     PRE LOADER
+============================== -->
+
+
+<!-- =========================
+     NAVIGATION LINKS
+============================== -->
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static 'css/overview.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/ztree/css/metroStyle/metroStyle.css' %}" type="text/css"/>
+{% endblock %}
+{% block custom_js %}
+    <script src="{% static 'js/monitor.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/ztree/js/jquery.ztree.all.min.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="body-frame">
+        <div class="top">
+            <div class="top_left data-box1">
+                <i class="topL"></i>
+                <i class="topR"></i>
+                <i class="bottomL"></i>
+                <i class="bottomR"></i>
+                <div class="data-title">
+                    <b class="data-title-left fl">[</b>
+                    <span>集群设备总览</span>
+                    <b class="data-title-right fr">]</b>
+                </div>
+                <div class="data_item">
+                    <div class="data_bg">
+                        <div class="data_bg_item">
+                            <p id="weapon_count">个</p><small>武器数</small>
+                        </div>
+                    </div>
+                    <div class=" data_bg">
+                        <div class="data_bg_item">
+                            <p id="radar_count">个</p><small>雷达数</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="data_item">
+
+                    <div class="data_bg">
+                        <div class="data_bg_item">
+                            <p id="compute_resource_count">个</p><small>计算资源</small>
+                        </div>
+                    </div>
+                    <div class="data_bg" id="top_left">
+                        <div class="data_bg_item">
+                            <p id="weapon_types">14种</p><small>资源种类</small>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="top_right data-box1">
+                <i class="topL"></i>
+                <i class="topR"></i>
+                <i class="bottomL"></i>
+                <i class="bottomR"></i>
+                <div class="data-title">
+                    <b class="data-title-left fl">[</b>
+                    <span>集群平台监控</span>
+                    <b class="data-title-right fr">]</b>
+                </div>
+                <div id="top_right-border" class="top_right_border"></div>
+            </div>
+        </div>
+        <div class="middle_line"></div>
+        <div class="bottom">
+            <div class="treeDemo data-box1">
+                <i class="topL"></i>
+                <i class="topR"></i>
+                <i class="bottomL"></i>
+                <i class="bottomR"></i>
+                <div class="data-title">
+                    <b class="data-title-left fl">[</b>
+                    <span>集群平台列表</span>
+                    <b class="data-title-right fr">]</b>
+                </div>
+                <div class="ztree-border">
+                    <ul id="treeDemo" class="ztree"></ul>
+                </div>
+            </div>
+            <div class="main">
+                <div class="layer_left data-box1 ">
+                    <i class="topL"></i>
+                    <i class="topR"></i>
+                    <i class="bottomL"></i>
+                    <i class="bottomR"></i>
+                    <div class="data-title">
+                        <b class="data-title-left fl">[</b>
+                        <span>平台监控</span>
+                        <b class="data-title-right fr">]</b>
+                    </div>
+                    <div id="CPU" class="layer2"></div>
+                    <div id="mem" class="layer2"></div>
+                    <div style="clear:both;overflow: auto"></div>
+                </div>
+                <div class="layer_right data-box1">
+                    <i class="topL"></i>
+                    <i class="topR"></i>
+                    <i class="bottomL"></i>
+                    <i class="bottomR"></i>
+                    <div class="data-title">
+                        <b class="data-title-left fl">[</b>
+                        <span>平台实时状态</span>
+                        <b class="data-title-right fr">]</b>
+                    </div>
+                    <div class="rigth_bottom">
+                        <div id="layer2" class="layer4"></div>
+                        <div id="layer1" class="layer4"></div>
+                    </div>
+
+                    <div id="layer3" class="layer3"></div>
+                    <div style="clear:both;overflow: auto"></div>
+                </div>
+            </div>
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">详细信息</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div id="leida_table" style="display: none">
+                                <table class="table">
+                                    <tr>
+                                        <th align="center">信息</th>
+                                        <th align="center">值</th>
+                                    </tr>
+                                    <tbody>
+                                    <tr>
+                                        <td align="center">雷达型号</td>
+                                        <td id="rsid" align="center">${dataInfo.rsid}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center">雷达型号名称</td>
+                                        <td id="rsname" align="center">${dataInfo.rsname}</td>
+                                    <tr>　　
+                                    <tr>
+                                        <td align="center">雷达类别</td>
+                                        <td id="rtype" align="center">${dataInfo.rtype}</td>
+                                    <tr>
+                                    <tr>
+                                        <td align="center">工作频段</td>
+                                        <td id="rop_band" align="center">${dataInfo.rop_band}</td>
+                                    <tr>　
+                                    <tr>
+                                        <td align="center">脉冲宽度</td>
+                                        <td id="rpulse_width" align="center">${dataInfo.rpulse_width}</td>
+                                    <tr>
+                                    <tr>
+                                        <td align="center">无线增益</td>
+                                        <td id="rantenna_gain" align="center">${dataInfo.rantenna_gain}</td>
+                                    <tr>
+                                    <tr>
+                                        <td align="center">脉冲重复频率</td>
+                                        <td id="rpulse_freg" align="center">${dataInfo.rpulse_freg}</td>
+                                    <tr>
+                                    <tr>
+                                        <td align="center">发射功率</td>
+                                        <td id="rtrans_power" align="center">${dataInfo.rtrans_power}</td>
+                                    <tr>
+                                    <tr>
+                                        <td align="center">最大作用半径</td>
+                                        <td id="rradius_max" align="center">${dataInfo.rradius_max}</td>
+                                    <tr>
+                                    <tr>
+                                        <td align="center">最大作用距离</td>
+                                        <td id="rdist_max" align="center">${dataInfo.rdist_max}</td>
+                                    <tr>　　
+                                    <tbody>
+                                </table>
+                            </div>
+                            <div id="jisuan_table" style="display: none">
+                                <table class="table">
+                                    <tr>
+                                        <th align="center">信息</th>
+                                        <th align="center">值</th>
+                                    </tr>
+                                    <tbody>
+                                    <tr>
+                                        <td align="center">计算资源型号</td>
+                                        <td id="csid" align="center">${dataInfo.csid}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center">计算资源型号名称</td>
+                                        <td id="csname" align="center">${dataInfo.csname}</td>
+                                    <tr>　　
+                                    <tr>
+                                        <td align="center">计算资源类别</td>
+                                        <td id="ctype" align="center">${dataInfo.ctype}</td>
+                                    <tr>
+                                    <tr>
+                                        <td align="center">计算精准度</td>
+                                        <td id="caccuracy" align="center">${dataInfo.caccuracy}</td>
+                                    <tr>　
+                                    <tbody>
+                                </table>
+                            </div>
+                            <div id="wuqi_table" style="display: none">
+                                <table class="table">
+                                    <tr>
+                                        <th align="center">信息</th>
+                                        <th align="center">值</th>
+                                    </tr>
+                                    <tbody>
+                                    <tr>
+                                        <td align="center">武器型号</td>
+                                        <td id="asid" align="center">${dataInfo.asid}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center">武器型号名称</td>
+                                        <td id="asname" align="center">${dataInfo.asname}</td>
+                                    <tr>　　
+                                    <tr>
+                                        <td align="center">武器类别</td>
+                                        <td id="atype" align="center">${dataInfo.atype}</td>
+                                    <tr>
+                                    <tr>
+                                        <td align="center">飞行速度</td>
+                                        <td id="aspeed" align="center">${dataInfo.aspeed}</td>
+                                    <tr>　
+                                    <tr>
+                                        <td align="center">杀伤半径</td>
+                                        <td id="akill_radius" align="center">${dataInfo.akill_radius}</td>
+                                    <tr>
+                                    <tr>
+                                        <td align="center">命中率</td>
+                                        <td id="ahit_rate" align="center">${dataInfo.ahit_rate}</td>
+                                    <tr>
+                                    <tr>
+                                        <td align="center">制导精度</td>
+                                        <td id="aguide_accuracy" align="center">${dataInfo.aguide_accuracy}</td>
+                                    <tr>
+                                    <tr>
+                                        <td align="center">命中精度</td>
+                                        <td id="ahit_accuracy" align="center">${dataInfo.ahit_accuracy}</td>
+                                    <tr>
+                                    <tr>
+                                        <td align="center">最大攻击距离</td>
+                                        <td id="aattack_distmax" align="center">${dataInfo.aattack_distmax}</td>
+                                    <tr>　
+                                    <tbody>
+                                </table>
+                            </div>
+                            <div id="err_info" style="display: none">该服务器暂未获取到详细信息！</div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="category_modal" tabindex="-1" role="dialog" aria-labelledby="classModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog catedialog">
+                    <div class="modal-content ">
+                        <div class="modal-header cateheader">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="classModalLabel">资源类别</h4>
+                        </div>
+                        <div class="modal-body catebody">
+                            <div id="leida_class" class="leida_class">
+                                <div>雷达类别：</div>
+                                <div id="leida_class_body" class="class_body"></div>
+                            </div>
+                            <div id="jisuan_class" class="jisuan_class">
+                                <div>计算资源类别：</div>
+                                <div id="jisuan_class_body" class="class_body"></div>
+                            </div>
+                            <div id="wuqi_class" class="wuqi_class">
+                                <div>武器类别：</div>
+                                <div id="wuqi_class_body" class="class_body"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer catefooter">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('top_left').addEventListener('click', showCategoryModal, false);//此id无用可删除
+        function showCategoryModal() {
+            insertClassItem('leida_class');
+            insertClassItem('jisuan_class');
+            insertClassItem('wuqi_class');
+            $('#category_modal').modal('show');
+        }
+
+        var classData = {
+            wuqi_class: [
+                {
+                    id: 101,
+                    className: 'A2G_S1机炮',
+                },
+                {
+                    id: 102,
+                    className: 'A2G_S2红外近距导弹',
+                },
+                {
+                    id: 103,
+                    className: 'A2G_S3红外中距导弹',
+                },
+                {
+                    id: 104,
+                    className: 'A2G_M1红外远距导弹',
+                },
+                {
+                    id: 105,
+                    className: 'A2G_M2智能炸弹',
+                },
+                {
+                    id: 106,
+                    className: 'A2G_L1空空导弹',
+                },
+            ],
+            leida_class: [
+                {
+                    id: 201,
+                    className: 'RD_A1 DAS',
+                },
+                {
+                    id: 202,
+                    className: 'RD_A2 光雷',
+                },
+                {
+                    id: 203,
+                    className: 'RD_A3 电子战EW',
+                },
+                {
+                    id: 204,
+                    className: 'RD_D1 火控雷达',
+                },
+                {
+                    id: 205,
+                    className: 'RD_D2 SAR雷达',
+                },
+                {
+                    id: 206,
+                    className: 'RD_S1无线通信雷达',
+                },
+            ],
+            jisuan_class: [
+                {
+                    id: 301,
+                    className: 'GPP',
+                },
+                {
+                    id: 302,
+                    className: 'VMM',
+                },
+            ]
+        }
+
+        //插入 Dom元素
+        function insertClassItem(name) {
+            var data = classData[name];
+            let len = data.length;
+            console.log(name + '_body');
+            document.getElementById(name + '_body').innerHTML = ' ';
+            for (var i = 0; i < len; i++) {
+                let item = document.createElement('div');
+                item.innerText = data[i].id + "   " + data[i].className;
+                document.getElementById(name + '_body').appendChild(item);
+            }
+
+        }
+
+        $(function () {
+            //初始化数据
+            initFirst();
+            //饼状图
+            renderChartBar01();
+            renderLayer04Left();
+            getServerInfo();
+
+
+        });
+
+    </script>
+{% endblock %}

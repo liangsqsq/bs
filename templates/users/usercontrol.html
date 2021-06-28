@@ -1,0 +1,485 @@
+{% extends 'users/user-base.html' %}
+
+{% load static %}
+{% block title %}控制台{% endblock %}
+{% block custom_css %}
+    <style>
+        td{
+            vertical-align:middle !important;
+        }
+        .ibox-tools {
+            display: block;
+            float: none;
+            margin-top: 0;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 0;
+            text-align: right;
+        }
+        .ibox-title {
+            -moz-border-bottom-colors: none;
+            -moz-border-left-colors: none;
+            -moz-border-right-colors: none;
+            -moz-border-top-colors: none;
+            border-color: #e7eaec;
+            border-image: none;
+            border-style: solid solid none;
+            border-width: 2px 0 0;
+            color: inherit;
+            margin-bottom: 0;
+            padding: 15px 90px 8px 15px;
+            min-height: 48px;
+            position: relative;
+            clear: both;
+        }
+    </style>
+{% endblock %}
+
+{% block custom_js %}{% endblock %}
+
+{% block content %}
+
+    <div class="down-main">
+        <div class="left-main left-full">
+            <div class="sidebar-fold"><span class="glyphicon glyphicon-menu-hamburger"></span></div>
+            <div class="subNavBox">
+                <div class="sBox">
+                    <div class="subNav sublist-down"><span
+                            class="title-icon glyphicon glyphicon-chevron-down"></span><span class="sublist-title">云计算基础服务</span>
+                    </div>
+                    <ul class="navContent" style="display:block">
+                        <li >
+                            <div class="showtitle" style="width:100px;">我的云主机</div>
+
+                            <a href="{% url 'users:usercontrol' %}"><span
+                                    class="sublist-icon glyphicon glyphicon-cloud"></span><span
+                                    class="sub-title">我的云主机</span></a>
+                        </li>
+<!--                           <li >-->
+<!--                            <div class="showtitle" style="width:100px;">我的备份</div>-->
+
+<!--                            <a href="{% url 'users:snapshotlist' %}"><span-->
+<!--                                    class="sublist-icon glyphicon glyphicon-cloud"></span><span-->
+<!--                                    class="sub-title">我的备份</span></a>-->
+<!--                        </li>-->
+                        <li >
+                            <div class="showtitle" style="width:100px;">我的容器</div>
+
+                            <a href="{% url 'users:container_list' %}"><span
+                                    class="sublist-icon glyphicon glyphicon-cloud"></span><span
+                                    class="sub-title">我的容器</span></a>
+                        </li>
+                        <li >
+                            <div class="showtitle" style="width:100px;">虚拟机申请记录</div>
+
+                            <a href="{% url 'users:vmcheck' %}"><span
+                                    class="sublist-icon glyphicon glyphicon-cloud"></span><span
+                                    class="sub-title">虚拟机申请记录</span></a>
+                        </li>
+<!--                        <li >-->
+<!--                            <div class="showtitle" style="width:100px;">端口申请记录</div>-->
+
+<!--                            <a href="{% url 'users:portRecords' %}"><span-->
+<!--                                    class="sublist-icon glyphicon glyphicon-check"></span><span-->
+<!--                                    class="sub-title">端口申请记录</span></a>-->
+                        </li>
+                        <li >
+                            <div class="showtitle" style="width:100px;">配置申请记录</div>
+
+                            <a href="{% url 'users:configurationRecords' %}"><span
+                                    class="sublist-icon glyphicon glyphicon-check"></span><span
+                                    class="sub-title">配置申请记录</span></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <div class="close-main" style="display: none" id="control_div_close">
+            <button type="button" class="btn" id="control_btn_close">
+                <span class="glyphicon glyphicon-menu-hamburger"></span>
+            </button>
+        </div>
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">我的云主机</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item">云计算基础服务</li>
+                                            <li class="breadcrumb-item active" aria-current="page">我的云主机</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+
+                    <div class="row">
+                        <!-- ============================================================== -->
+                        <!-- basic table  -->
+                        <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card">
+                                <div class="ibox-title">
+                                    <h3 style="padding-left: 20px;padding-top: 10px">云主机信息</h3>
+                                    <div class="ibox-tools">
+                                        <div class="btn-group">
+                                            <a href="{% url 'vm:virtualhost' %}" type="button"
+                                               class="btn btngroup-prime"><span
+                                                    class="glyphicon glyphicon-plus mar-right"></span>新建</a>
+
+                                            <button type="button" id="inuse" class="btn btngroup-info"><span
+                                                    class="glyphicon glyphicon-repeat mar-right"></span>立即使用
+                                            </button>
+                                            <button type="button" id="startVM" class="btn btngroup-info"><span
+                                                    class="glyphicon glyphicon-play mar-right"></span>开机
+                                            </button>
+
+                                            <button type="button" id="shutdownVM"
+                                                    class="btn btngroup-warning"><span
+                                                    class="glyphicon glyphicon-off mar-right"></span>关机
+                                            </button>
+
+{#                                            <button type="button" id="upgrade_set"#}
+{#                                                    class="btn btngroup-prime optimistic"> <span#}
+{#                                                    class="glyphicon glyphicon-open mar-right"></span>优化配置#}
+{#                                            </button>#}
+
+                                            <button type="button" id="modifyVM"
+                                                    class="btn btngroup-info"> <span
+                                                    class="glyphicon glyphicon-open mar-right"></span>修改配置
+                                            </button>
+
+                                            <button type="button" id="applyPort"
+                                                    class="btn btngroup-info"> <span
+                                                    class="glyphicon glyphicon-open mar-right"></span>申请端口
+                                            </button>
+                                            <button type="button" id="importVM"
+                                                    class="btn btngroup-warning"> <span
+                                                    class="glyphicon glyphicon-download-alt mar-right"></span>导入
+                                            </button>
+
+                                             <a href="{% url 'users:regetVMIP' %}" type="button"
+                                               class="btn btngroup-danger"><span
+                                                    class="glyphicon glyphicon-search mar-right"></span>重新获取IP</a>
+                                              <a href="{% url 'users:snapshotlist' %}" type="button"
+                                               class="btn btngroup-info"><span
+                                                    class="fa fa-camera"></span>备份列表</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body" style="padding-top:5px">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered first" id="tab">
+                                            <thead>
+                                            <tr>
+                                                <th ><input type="checkbox" class="tpl-table-fz-check"></th>
+                                                <th >实例ID</th>
+                                                <th >虚拟机</th>
+                                                <th >用户名</th>
+                                                <th >操作系统</th>
+                                                <th >处理器</th>
+                                                <th >内存</th>
+                                                <th >硬盘</th>
+                                                <th >所在域</th>
+                                                <th >内网地址</th>
+                                                <th >网关地址</th>
+                                                <th >连接端口</th>
+                                                <th >创建时间</th>
+                                                <th >状态</th>
+                                            </tr>
+                                            </thead>
+                                            <form id="vmform" method="post">
+                                                {% for vm in vm_list %}
+                                                    <tr href="" id="dbtn">
+
+                                                        <td><input id="inputid1" type="checkbox" name="<vmname1>">
+                                                        </td>
+                                                        <td>{{ forloop.counter }}</td>
+                                                        <td>{{ vm.name }}</td>
+                                                        <td>{{ vm.os.default_user }}</td>
+                                                        <td>{{ vm.os.os_version }}</td>
+                                                        <td>{{ vm.vCPUs }}核</td>
+                                                        <td>{{ vm.memory }}G</td>
+                                                        <td>{{ vm.diskSize }}G</td>
+                                                        <td>{{ vm.region.domain }}</td>
+                                                        <td>{{ vm.ip }}</td>
+                                                        <td>{{ vm.gateway_ip }}</td>
+                                                        <td>{{ vm.conn_port }}</td>
+                                                        <td>{{ vm.start_time }}</td>
+                                                        {% if vm.power_state == 'running' %}
+                                                            <td>可用</td>
+                                                        {% else %}
+                                                            <td>关机</td>
+                                                        {% endif %}
+                                                    </tr>
+                                                {% endfor %}
+                                            </form>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content  setborder">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" ><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel" style="word-spacing: 3px;">修改虚拟机配置</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form action="/users/applydeploy/" method="POST" id="form-settings" style="margin-left:25px;"
+                          enctype="multipart/form-data">
+                        <table class="setmar">
+                            <tr>
+                                <td><span>虚拟机名</span></td>
+                                <td>
+                                    <input type="text" class="system setinput item item-info"
+                                           data-mtpis='输入你的虚拟机名称' data-mtpis-style='info' name="VMNAME">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>内存大小：</span></td>
+                                <td>
+                                    <input type="text" class="system setinput item item-info"
+                                           data-mtpis='以GB为单位，例如：4=4GB' data-mtpis-style='info' name="MEMORY">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>CPU处理器：</span></td>
+                                <td>
+                                    <input type="text" class="system setinput item item-info" data-mtpis='CPU处理器数量，例如：4'
+                                           data-mtpis-style='info' name="CPU">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>硬盘大小：</span></td>
+                                <td>
+                                    <input type="text" class="system setinput item item-info"
+                                           data-mtpis='以GB为单位，例如：100=100GB' data-mtpis-style='default' name="DISK">
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="submit1" class="btn btn-info" data-dismiss="modal">提交</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content  setborder">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel" style="word-spacing: 3px;">虚拟机端口开放申请</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="/users/applyport/" method="POST" id="form-port" style="margin-left:25px;"
+                          enctype="multipart/form-data">
+                        <table class="setmar">
+                            <tr>
+                                <td><span>虚拟机名</span></td>
+                                <td>
+                                    <input type="text" class="system setinput item item-info"
+                                           data-mtpis='输入你的虚拟机名称' data-mtpis-style='default' name="VMNAME">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>端口号：</span></td>
+                                <td>
+                                    <input type="text" class="system setinput item item-info"
+                                           data-mtpis='输入需开放的端口号（0~65535）'
+                                           data-mtpis-style='info' name="PORT">
+                                </td>
+                            </tr>
+
+                        </table>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="submit2" class="btn btn-info" data-dismiss="modal">提交</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="op_setting" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content  setborder">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" style="word-spacing: 3px;">虚拟机优化日志</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="/test/" method="POST" style="margin-left:25px;" enctype="multipart/form-data">
+                    <span>
+                        优化时间可能较长，一般需要20分钟，请耐心等待！
+                        <br>期间虚拟机会自动重启，请注意保存当前工作！
+                        <br>优化中…………
+                        <br>
+                        <button type="button" id="show_progress" class="btn btn-info"
+                                data-dismiss="modal">显示进度 </button>
+                        <button type="button" id="show_history" class="btn btn-info"
+                                data-dismiss="modal">优化历史  </button>
+
+                        <script language="JavaScript">
+                            function show_progress() {
+                                $.ajax({
+                                    url: "/admins/get_progress",
+                                    type: "GET",
+                                    data: progress,
+                                    success: function (data) {
+                                        console.log(data);
+                                        while (true) {
+                                            if (data[progress] == 100) {
+                                                alert("success!")
+                                                break;
+                                            } else {
+                                                alert(data[progress]);
+                                            }
+                                        }
+                                    }
+                                })
+                            }
+                        </script>
+                    </span>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content  setborder">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" style="word-spacing: 3px;">导入虚拟机</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div style="margin-left:25px;">
+                        <table class="setmar">
+                            <tr>
+                                <td><span>ip地址</span></td>
+                                <td>
+                                    <input type="text" class="system setinput item item-info"
+                                           data-mtpis='输入你的ip地址' data-mtpis-style='info' id="vmip">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>端口号</span></td>
+                                <td>
+                                    <input type="text" class="system setinput item item-info"
+                                           data-mtpis='输入你的端口号' data-mtpis-style='info' id="port">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>用户名：</span></td>
+                                <td>
+                                    <input type="text" class="system setinput item item-info"
+                                           data-mtpis='输入你的用户名' data-mtpis-style='info' id="username">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>密码：</span></td>
+                                <td>
+                                    <input type="text" class="system setinput item item-info"
+                                           data-mtpis='输入你的密码' data-mtpis-style='info' id="password">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="importSubmit" class="btn btn-info" data-dismiss="modal">提交</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            /*左侧导航栏显示隐藏功能*/
+            $(".subNav").click(function () {
+                /*显示*/
+                if ($(this).find("span:first-child").attr('class') == "title-icon glyphicon glyphicon-chevron-down") {
+                    $(this).find("span:first-child").removeClass("glyphicon-chevron-down");
+                    $(this).find("span:first-child").addClass("glyphicon-chevron-up");
+                    $(this).removeClass("sublist-down");
+                    $(this).addClass("sublist-up");
+                }
+                /*隐藏*/
+                else {
+                    $(this).find("span:first-child").removeClass("glyphicon-chevron-up");
+                    $(this).find("span:first-child").addClass("glyphicon-chevron-down");
+                    $(this).removeClass("sublist-up");
+                    $(this).addClass("sublist-down");
+                }
+                // 修改数字控制速度， slideUp(500)控制卷起速度
+                $(this).next(".navContent").slideToggle(300).siblings(".navContent").slideUp(300);
+            })
+            /*左侧导航栏缩进功能*/
+            $(".left-main .sidebar-fold").click(function () {
+
+                if ($(this).parent().attr('class') == "left-main left-full") {
+                    $(this).parent().removeClass("left-full");
+                    $(this).parent().addClass("left-off");
+
+                    $(this).parent().parent().find(".right-product").removeClass("right-full");
+                    $(this).parent().parent().find(".right-product").addClass("right-off");
+
+                } else {
+                    $(this).parent().removeClass("left-off");
+                    $(this).parent().addClass("left-full");
+
+                    $(this).parent().parent().find(".right-product").removeClass("right-off");
+                    $(this).parent().parent().find(".right-product").addClass("right-full");
+
+                }
+            })
+
+            /*左侧鼠标移入提示功能*/
+            $(".sBox ul li").mouseenter(function () {
+                if ($(this).find("span:last-child").css("display") == "none") {
+                    $(this).find("div").show();
+                }
+            }).mouseleave(function () {
+                $(this).find("div").hide();
+            })
+        })
+
+    </script>
+
+{% endblock %}
+
+
+

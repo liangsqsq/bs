@@ -1,0 +1,245 @@
+{% extends 'users/user-base.html' %}
+
+{% load static %}
+{% block title %}虚拟机管理{% endblock %}
+{% block custom_css %}
+    {#    <link href="css/domain.css" rel="stylesheet" title="" type="text/css"/>#}
+    <style>
+        td{
+            vertical-align:middle !important;
+        }
+    </style>
+{% endblock %}
+
+{% block custom_js %}{% endblock %}
+
+{% block contentVMrecy %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#tab").on("click", ":button", function (event) {
+                var vm_name = $(this).closest("tr").find("td").eq(2).text();
+                var user_name = $(this).closest("tr").find("td").eq(1).text();
+                var vm_ip = $(this).closest("tr").find("td").eq(9).text();
+                var btn_id=$(this).attr('id');
+                if (btn_id == 'vmrecy'){
+                    $.ajax({
+                    type: "POST",
+                    data: {
+                        'vm_name': vm_name,
+                        'vm_ip': vm_ip,
+                    },
+                    url: "/admins/delete_vm/",
+                    success: function (data) {
+                        if (data["st"] === 1) {
+                            alert("成功");
+                            window.location.reload();
+                        } else if (data["st"] === 2) {
+                            alert("Failed to delete virtual machine");
+                        } else if (data["st"] === 3) {
+                            alert("Failed to delete vm noVNC token");
+                        }
+                    },
+                    error: function () {
+                        alert("false");
+                    }
+                })
+                }
+                if(btn_id == 'backup'){
+                    $.ajax({
+                    type: "POST",
+                    data: {
+                        'vm_name': vm_name,
+                        'user_name': user_name,
+                        'vm_ip': vm_ip,
+                    },
+                    url: "/admins/backup_vm/",
+                    success: function (data) {
+                        if (data["st"] === 1) {
+                            alert("成功");
+                            window.location.reload();
+                        } else if (data["st"] === 2) {
+                            alert("Failed to backup virtual machine");
+                        }
+                    },
+                    error: function () {
+                        alert("false");
+                    }
+                })
+                }
+
+                });
+        })
+    </script>
+
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">虚拟机管理</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item">虚拟机设置</li>
+                                            <li class="breadcrumb-item active" aria-current="page">虚拟机管理</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+
+                    <div class="row">
+                        <!-- ============================================================== -->
+                        <!-- basic table  -->
+                        <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered first" id="tab">
+                                            <thead>
+                                            <tr>
+                                                <th >ID</th>
+                                                <th >用户</th>
+                                                <th >虚拟机</th>
+                                                <th >操作系统</th>
+                                                <th >内存</th>
+                                                <th >处理器</th>
+                                                <th >磁盘</th>
+                                                <th>类型</th>
+                                                <th>型号</th>
+                                                <th >域内地址</th>
+                                                <th >网关地址</th>
+                                                <th >所在域</th>
+                                                <th >运行时间</th>
+                                                <th >操作</th>
+                                                <th>操作</th>
+                                            </tr>
+                                            </thead>
+                                            {% for vm in vms %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td><a href="">{{ vm.username }}</a></td>
+                                                    <td>{{ vm.name }}</td>
+                                                    <td>{{ vm.os_version }}</td>
+                                                    <td>{{ vm.memory }}G</td>
+                                                    <td>{{ vm.vCPUs }}核</td>
+                                                    <td>{{ vm.diskSize }}G</td>
+                                                    <td>{{ vm.diskType }}</td>
+                                                    <td>{{ vm.diskAllocation }}</td>
+                                                    <td>{{ vm.ip }}</td>
+                                                    <td>{{ vm.gateway_ip }}</td>
+                                                    <td>{{ vm.domain }}</td>
+                                                    <td>{{ vm.start_time }}</td>
+                                                    {% if vm.is_del == 0 %}
+                                                        <td>
+                                                            <button type="button" id="vmrecy" class="btn btn-danger">
+                                                                <span class="glyphicon glyphicon-trash">回收</span></button>
+                                                        </td>
+                                                    {% else %}
+                                                        <td>已回收</td>
+                                                    {% endif %}
+                                                    <td>
+                                                            <button type="button" id="backup" class="btn btn-info">
+                                                                <span class="fa fa-camera">备份</span></button>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                        {% if vms.paginator.num_pages > 1%}
+                                            <nav aria-label="Page navigation example">
+                                                <ul class="pagination pull-right" style="padding-right: 50px;">
+                                                    {% if vms.number == 1 %}
+                                                        <li class="disabled page-item">
+                                                            <a aria-label="First" class="page-link">
+                                                                <span aria-hidden="true">&laquo;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="page-item">
+                                                            <a href="{% url 'admins:vm_recy' 1 %}" aria-label="First" class="page-link">
+                                                                <span aria-hidden="true">&laquo;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% endif %}
+                                                    {% if vms.has_previous %}
+                                                        <li class="page-item">
+                                                            <a href="{% url 'admins:vm_recy' vms.previous_page_number %}" aria-label="Previous" class="page-link">
+                                                                <span aria-hidden="true">&lt;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="disabled page-item">
+                                                            <a aria-label="Previous" class="page-link">
+                                                                <span aria-hidden="true">&lt;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% endif %}
+                                                    {% for num in display_list %}
+                                                        {% if vms.number == num %}
+                                                            <li class="active page-item">
+                                                                <a class="page-link">
+                                                                    <span aria-hidden="true">{{num}}</span>
+                                                                </a>
+                                                            </li>
+                                                        {% else %}
+                                                            <li class="page-item">
+                                                                <a href="{% url 'admins:vm_recy' num %}" class="page-link">
+                                                                    <span aria-hidden="true">{{num}}</span>
+                                                                </a>
+                                                            </li>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if vms.has_next %}
+                                                        <li class="page-item">
+                                                            <a href="{% url 'admins:vm_recy' vms.next_page_number %}" aria-label="Next" class="page-link">
+                                                                <span aria-hidden="true">&gt;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="disabled page-item">
+                                                            <a aria-label="Next" class="page-link">
+                                                                <span aria-hidden="true">&gt;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% endif %}
+                                                    {% if vms.number == vms.paginator.num_pages %}
+                                                        <li class="disabled page-item">
+                                                            <a aria-label="Last" class="page-link">
+                                                                <span aria-hidden="true">&raquo;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="page-item">
+                                                            <a href="{% url 'admins:vm_recy' vms.paginator.num_pages %}" aria-label="Last" class="page-link">
+                                                                <span aria-hidden="true">&raquo;</span>
+                                                            </a>
+                                                        </li>
+                                                    {% endif %}
+                                                    <span class="total" style="line-height: 30px; margin-left: 10px;">
+                                                        共有{{vms.paginator.count}}条记录
+                                                    </span>
+                                                </ul>
+                                            </nav>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+{% endblock %}

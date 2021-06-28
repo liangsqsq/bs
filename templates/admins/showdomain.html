@@ -1,0 +1,50 @@
+{% extends 'users/user-base.html' %}
+
+{% load static %}
+{% block title %}后台管理{% endblock %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+
+{% endblock %}
+{% block custom_js %}
+
+{% endblock %}
+
+{% block content3 %}
+    <style type="text/css">
+
+        .red {
+            background-color: #e7505a;
+        }
+
+        .blue {
+            background-color: #3598dc;
+        }
+
+        .green {
+            background-color: #32c5d2;
+        }
+
+        .puple {
+            background-color: #8E44AD;
+        }
+    </style>
+    <div class="right-product my-index right-full">
+        <iframe src="http://222.25.188.1:50239/d/E0Pgjivmk/dragonstack-dashboards" scrolling="no"
+                width="100%" onload="changeFrameHeight()" id="myiframe" name="myiframe"
+                frameborder="0">
+        </iframe>
+    </div>
+
+    <script>
+        function changeFrameHeight() {
+            var ifm = document.getElementById("myiframe");
+            ifm.height = document.documentElement.clientHeight - 54;
+        }
+
+        window.onresize = function () {
+            changeFrameHeight();
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,173 @@
+{% extends 'users/user-base.html' %}
+
+{% load static %}
+{% block title %}添加镜像{% endblock %}
+{% block custom_css %}
+    {#    <link href="css/domain.css" rel="stylesheet" title="" type="text/css"/>#}
+{% endblock %}
+
+{% block custom_js %}
+<script>
+    function check_form(){
+        var message = "";
+        if($("#osVersion").val() == ""){
+            message = "操作系统不能为空";
+        }else if($("#imgPath").val() == ""){
+            message = "镜像路径不能为空";
+        }else if($("#isoPath").val() == ""){
+            message = "ISO不能为空";
+        }else if($("#imgUser").val() == ""){
+            message = "默认用户名不能为空";
+        }else if($("#imgPwd").val() == ""){
+            message = "默认密码不能为空";
+        }else if($("#imgPort").val() == ""){
+            message = "默认连接端口不能为空";
+        }
+        if(message != ""){
+            $("#tipbody").text(message);
+            $("#tipModal").modal("show");
+            return ;
+        }
+        $("#imgForm").submit();
+    }
+</script>
+{% endblock %}
+
+{% block contentIMG %}
+        <div class="dashboard-wrapper">
+            <div class="dashboard-ecommerce">
+                <div class="container-fluid dashboard-content ">
+                    <!-- ============================================================== -->
+                    <!-- pageheader  -->
+                    <!-- ============================================================== -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="page-header">
+                                <h2 class="pageheader-title">添加镜像</h2>
+                                <div class="page-breadcrumb">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item">镜像管理</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">添加镜像</li>
+                                        </ol>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end pageheader  -->
+                    <!-- ============================================================== -->
+
+                    <div class="row">
+                        <!-- ============================================================== -->
+                        <!-- basic table  -->
+                        <!-- ============================================================== -->
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="card" style="background-color:#FFFFFF">
+                                <div class="card-body">
+                                    <form method="post" action="/admins/add_img/" id="imgForm">
+                                            <div class="form-group row" style="padding-top:50px">
+                                                <label for="osVersion"
+                                                       class="col-12 col-sm-3 col-form-label text-right">操作系统</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="osVersion"
+                                                           id="osVersion"
+                                                           placeholder="操作系统">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="imgPath" class="col-12 col-sm-3 col-form-label text-right">镜像路径</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="imgPath" id="imgPath"
+                                                           placeholder="/var/lib/libvirt/images/">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="isoPath"
+                                                       class="col-12 col-sm-3 col-form-label text-right">ISO路径</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="isoPath" id="isoPath"
+                                                           placeholder="/var/lib/libvirt/images/iso">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="imgUser"
+                                                       class="col-12 col-sm-3 col-form-label text-right">默认用户名</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="imgUser" id="imgUser"
+                                                           placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="imgPwd" class="col-12 col-sm-3 col-form-label text-right">默认密码</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="imgPwd" id="imgPwd"
+                                                           placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="imgPort" class="col-12 col-sm-3 col-form-label text-right">默认连接端口</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <input type="text" class="form-control" name="imgPort" id="imgPort"
+                                                           placeholder="22/3389">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="exampleInputBelong"
+                                                       class="col-12 col-sm-3 col-form-label text-right">所在服务器</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <select name="server" id="server">
+                                                        {% for server  in communication_list %}
+                                                            <option value="{{ server }}">{{ server }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="imgDomain" class="col-12 col-sm-3 col-form-label text-right">所在域</label>
+                                                <div class="col-12 col-sm-8 col-lg-6">
+                                                    <select name="imgDomain" id="imgDomain">
+                                                        {% for domain  in domain_list %}
+                                                            <option value="{{ domain.id }}">{{ domain.domain }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row text-right">
+                                                <div class="col col-sm-10 col-lg-9 offset-sm-1 offset-lg-0">
+                                                    <button type="button" class="btn btn-space btn-primary" onclick="check_form()">确认</button>
+                                                </div>
+                                            </div>
+                                            <p class="text-danger text-center">{{ message }}</p>
+                                        </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    $("#server").change(function (){
+        var server_ip = $("#server").val();
+        $.ajax({
+            type: "POST",
+            data: {
+                'server_ip': server_ip,
+            },
+            url: "/admins/get_domain_by_ip/",
+            success: function (data) {
+                console.log(data);
+                var domain_list = data['domain'];
+                var content = "";
+                for(var i=0; i<domain_list.length; i++){
+                    content += "<option value="+ domain_list[i].id +">" + domain_list[i].domain + "</option><br>"
+                }
+                $("#imgDomain").html(content);
+            }
+        })
+    })
+    </script>
+{% endblock %}

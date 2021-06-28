@@ -1,0 +1,18 @@
+<volume type='file'>
+  <name>VOLUME_NAME</name>
+  <capacity unit="G">DISK_SIZE</capacity>
+  <target>
+    <path>VOLUME_PATH</path>
+    <format type='qcow2'/>
+    <permissions>
+      <owner>64055</owner>
+      <group>129</group>
+      <mode>0744</mode>
+      <label>virt_image_t</label>
+    </permissions>
+  </target>
+  <backingStore>
+    <path>BACKING_FILE</path>
+    <format type='qcow2'/>
+  </backingStore>
+</volume>
