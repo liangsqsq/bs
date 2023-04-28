@@ -140,14 +140,16 @@ AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBacke
 STATIC_URL = '/static/'
 STATICFILES_DIRS = ( os.path.join(BASE_DIR, "static"),)
 
-EMAIL_HOST = 'smtp.126.com'  # 如果是 163 改成 smtp.163.com
+# EMAIL_HOST = 'smtp.126.com'  # 如果是 163 改成 smtp.163.com
+EMAIL_HOST = 'smtp.163.com'
 
 EMAIL_PORT = 25
 
-EMAIL_HOST_USER = "nss_cloud@126.com"
+EMAIL_HOST_USER = "gouziks21@163.com"
 
-EMAIL_HOST_PASSWORD = "ZNGEOZVRBHAQQJPA"  # 授权码（****）
+# 授权码（****）
+EMAIL_HOST_PASSWORD = "KONKZTNHWUWTDMWR" 
 
 EMAIL_USE_TLS = False
 
-EMAIL_FROM = "nss_cloud@126.com"
+EMAIL_FROM = "gouziks21@163.com"
