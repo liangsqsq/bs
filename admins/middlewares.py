@@ -25,7 +25,7 @@ class hasNewZabbix(MiddlewareMixin):
                     else:
                         print(ip)
                         try:
-                            f = open('/home/xidian/' + ip + '_recode', 'r')
+                            f = open('/home/jinx/' + ip + '_recode', 'r')
                         except:
                             apply_node.objects.create(host_name=ip, ip=ip)
                         else:

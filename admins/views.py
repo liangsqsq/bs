@@ -1283,7 +1283,7 @@ def recv_info():
     while True:
         sock, addr = s_recv.recvfrom(8192)
         if sock.decode().strip(b'\x00'.decode()) == 'nss send':
-            s_recv.sendto('receive xidian xidian'.encode(), (addr[0], 10000))
+            s_recv.sendto('receive jinx 1'.encode(), (addr[0], 10000))
             node_join(addr[0])
 
 def recv_thread():

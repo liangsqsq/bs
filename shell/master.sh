@@ -40,3 +40,10 @@ sudo apt install \
 
 pyenv global 3.6.8
 pip install virtualenv -i https://pypi.python.org/simple/
+virtualenv -p ~/.pyenv/versions/3.6.8/bin/python venv/
+wget https://repo.zabbix.com/zabbix/5.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_5.0-1+bionic_all.deb
+dpkg -i z
+sudo apt update
+sudo apt install apache2
+sudo apt install php
+sudo apt install  zabbix-server-mysql zabbix-frontend-php zabbix-agent zabbix-get 
