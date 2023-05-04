@@ -24,9 +24,9 @@ use requirements.txt:
     
 how to start:
 ---
-    1.mysql: create database newcloud default character set utf8
-    2.python manage.py makemigrations
-    3.python manage.py migrate
-    4.python manage.py createsuperuser
-    5.python manage.py runserver 0:port
+    mysql: create database newcloud default character set utf8
+    python manage.py makemigrations
+    python manage.py migrate
+    python manage.py createsuperuser
+    python manage.py runserver localhost:27777
     

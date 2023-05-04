@@ -278,6 +278,7 @@ def get_resourceinfo(node_name):
     else:
         disk = round((1 - (float(disk_free) / float(disk_total))) * 100, 2)
 
+    print(disk_total)
     timeArray = time.localtime(int(clock))
     now_time = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
 
