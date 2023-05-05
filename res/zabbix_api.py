@@ -136,14 +136,14 @@ class Zabbix:
         :return:
         """
         hosts = self.hostid_get(host_name)
-        print('hosts:\n', hosts)
+        # print('hosts:\n', hosts)
         for host in hosts:
             if host["available"] == "1":
                 items = self.itemid_get(host['hostid'], key)
-                print('items:\n', items)
+                # print('items:\n', items)
                 for item in items:
                     historys = self._historys_get(item['itemid'], history_type, limit)
-                    print('historys:\n', historys)
+                    # print('historys:\n', historys)
                     return historys
             else:
                 return [
