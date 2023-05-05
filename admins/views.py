@@ -817,11 +817,11 @@ def VM_Recy(request, pindex, data=None):
                 res_dist['vCPUs'] = vm_.vCPUs
                 res_dist['diskSize'] = vm_.diskSize
                 if transfer.objects.get(resource_name=vm_.name).classes == 1:
-                    diskType = "武器"
+                    diskType = "无人机"
                 elif transfer.objects.get(resource_name=vm_.name).classes == 2:
-                    diskType = "雷达"
+                    diskType = "无人车"
                 else:
-                    diskType = "计算资源"
+                    diskType = "无人船"
                 res_dist['diskType'] = diskType
                 res_dist['diskAllocation'] = transfer.objects.get(resource_name=vm_.name).model
                 res_dist['ip'] = vm_.ip
@@ -859,11 +859,11 @@ def VM_Recy_request(request):
         res_dist['vCPUs'] = vm_.vCPUs
         res_dist['diskSize'] = vm_.diskSize
         if transfer.objects.get(resource_name=vm_.name).classes == 1:
-            diskType = "武器"
+            diskType = "无人机"
         elif transfer.objects.get(resource_name=vm_.name).classes == 2:
-            diskType = "雷达"
+            diskType = "无人车"
         else:
-            diskType = "计算资源"
+            diskType = "无人船"
         res_dist['diskType'] = diskType
         res_dist['diskAllocation'] = transfer.objects.get(resource_name=vm_.name).model
         res_dist['ip'] = vm_.ip

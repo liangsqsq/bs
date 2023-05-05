@@ -433,11 +433,11 @@ def container_manage(request, pindex, data=None):
                 res_dist['memory'] = container_.memory
                 res_dist['cpu_cores'] = container_.cpu_cores
                 if transfer.objects.get(resource_name=container_.name).classes == 1:
-                    mountPoint = "武器"
+                    mountPoint = "无人机"
                 elif transfer.objects.get(resource_name=container_.name).classes == 2:
-                    mountPoint = "雷达"
+                    mountPoint = "无人车"
                 else:
-                    mountPoint = "计算资源"
+                    mountPoint = "无人船"
                 res_dist['mount_point'] = mountPoint
                 res_dist['volume_name'] = str(transfer.objects.get(resource_name=container_.name).model)
                 res_dist['node_ip'] = container_.node.ip
@@ -475,11 +475,11 @@ def container_manage_request(request):
         res_dist['memory'] = container_.memory
         res_dist['cpu_cores'] = container_.cpu_cores
         if transfer.objects.get(resource_name=container_.name).classes == 1:
-            mountPoint = "武器"
+            mountPoint = "无人机"
         elif transfer.objects.get(resource_name=container_.name).classes == 2:
-            mountPoint = "雷达"
+            mountPoint = "无人车"
         else:
-            mountPoint = "计算资源"
+            mountPoint = "无人船"
         res_dist['mount_point'] = mountPoint
         res_dist['volume_name'] = str(transfer.objects.get(resource_name=container_.name).model)
         res_dist['node_ip'] = container_.node.ip

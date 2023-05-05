@@ -174,16 +174,16 @@ function initTree(data) {
 function renderChartBar01(radar_count, computer_resource_count, weapon_count) {
     var myChart = echarts.init(document.getElementById("layer1"));
     var seriesData = [{
-        name: "武器",
+        name: "无人机",
         value: weapon_count
     }, {
-        name: "计算资源",
+        name: "无人船",
         value: computer_resource_count
     }, {
-        name: "雷达",
+        name: "无人车",
         value: radar_count
     }];
-    var legendData = ["武器", "计算资源", "雷达"]
+    var legendData = ["无人机", "无人船", "无人车"]
     var colorList = ['#73ACFF', '#FDB36A', '#9E87FF'];
     option = {
         title: {
@@ -1029,7 +1029,7 @@ function renderTopRigth(all_node_info) {
                 },
 
             },{
-                text: '{a|导弹数}\n{b|' + all_node_info[i].node_info.node_weapon_count + '个}',
+                text: '{a|资源数}\n{b|' + all_node_info[i].node_info.node_weapon_count + '个}',
                 top: '37%',
                 left: '25%',
                 textStyle: {

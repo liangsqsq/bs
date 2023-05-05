@@ -43,13 +43,13 @@ def getSources(request, radar_count_other=0, compute_resource_count_other=0, wea
                         vm_transfer_dict = {}
                         if vm_transfer.classes == 1:
                             node_weapon_count = node_weapon_count + 1
-                            vm_transfer_name = "武器"
+                            vm_transfer_name = "无人机"
                             iconSkin = "wuqi"
                         elif vm_transfer.classes == 2:
-                            vm_transfer_name = "雷达"
+                            vm_transfer_name = "无人车"
                             iconSkin = "leida"
                         else:
-                            vm_transfer_name = "计算资源"
+                            vm_transfer_name = "无人船"
                             iconSkin = "jisuan"
 
                         vm_transfer_dict["menuName"] = vm_transfer_name + str(vm_transfer.model)
@@ -80,13 +80,13 @@ def getSources(request, radar_count_other=0, compute_resource_count_other=0, wea
                         container_transfer_dict = {}
                         if container_transfer.classes == 1:
                             node_weapon_count = node_weapon_count + 1
-                            container_transfer_name = "武器"
+                            container_transfer_name = "无人机"
                             iconSkin = "wuqi"
                         elif container_transfer.classes == 2:
-                            container_transfer_name = "雷达"
+                            container_transfer_name = "无人车"
                             iconSkin = "leida"
                         else:
-                            container_transfer_name = "计算资源"
+                            container_transfer_name = "无人船"
                             iconSkin = "jisuan"
 
                         container_transfer_dict["menuName"] = container_transfer_name + str(container_transfer.model)
