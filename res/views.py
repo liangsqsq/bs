@@ -272,7 +272,7 @@ def get_resourceinfo(node_name):
     try:
         disk_total = za.historys_get(node_name, "vfs.fs.size[/,total]", 3, 1)[0]["value"]
         disk_free = za.historys_get(node_name, "vfs.fs.size[/,free]", 3, 1)[0]["value"]
-        # clock = za.historys_get(node_name, "vfs.fs.size[/,free]", 3, 1)[0]["clock"]
+        clock = za.historys_get(node_name, "vfs.fs.size[/,free]", 3, 1)[0]["clock"]
     except:
         disk = 0
     else:
