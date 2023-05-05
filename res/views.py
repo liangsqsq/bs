@@ -297,7 +297,8 @@ def get_res_info(request):
             res_type = res[-4::-1][::-1]
             print(res_name, res_type)
 
-            if res_type == "雷达":
+            # 获取资源信息
+            if res_type == "虚拟机":
                 radar_object = radar_info.objects.get(rsname=res_name)
                 return JsonResponse({"dataInfo":{
                     "rsid":radar_object.id,
@@ -311,7 +312,7 @@ def get_res_info(request):
                     "rradius_max": radar_object.rradius_max,
                     "rdist_max": radar_object.rdist_max
                 }})
-            elif res_type == "武器":
+            elif res_type == "":
                 weapon_object = arm_info.objects.get(asname=res_name)
                 return JsonResponse({"dataInfo":{
                     "asid": weapon_object.id,
@@ -333,4 +334,41 @@ def get_res_info(request):
                     "caccuracy": compute_object.caccuracy
                 }
                 })
+
+            # if res_type == "雷达":
+            #     radar_object = radar_info.objects.get(rsname=res_name)
+            #     return JsonResponse({"dataInfo":{
+            #         "rsid":radar_object.id,
+            #         "rsname": radar_object.rsname,
+            #         "rtype": radar_object.rtype,
+            #         "rop_band": radar_object.rop_band,
+            #         "rpulse_width": radar_object.rpulse_width,
+            #         "rantenna_gain": radar_object.rantenna_gain,
+            #         "rpulse_freq": radar_object.rpulse_freq,
+            #         "rtrans_power": radar_object.rtrans_power,
+            #         "rradius_max": radar_object.rradius_max,
+            #         "rdist_max": radar_object.rdist_max
+            #     }})
+            # elif res_type == "武器":
+            #     weapon_object = arm_info.objects.get(asname=res_name)
+            #     return JsonResponse({"dataInfo":{
+            #         "asid": weapon_object.id,
+            #         "asname": weapon_object.asname,
+            #         "atype": weapon_object.atype,
+            #         "aspeed": weapon_object.aspeed,
+            #         "akill_radius": weapon_object.akill_radius,
+            #         "ahit_rate": weapon_object.ahit_rate,
+            #         "aguide_accuracy": weapon_object.aguide_accuracy,
+            #         "ahit_accuracy": weapon_object.ahit_accuracy,
+            #         "aattack_distmax": weapon_object.aattack_distmax
+            #     }})
+            # else:
+            #     compute_object = compute_info.objects.get(csname=res_name)
+            #     return JsonResponse({"dataInfo":{
+            #         'csid': compute_object.id,
+            #         "csname": compute_object.csname,
+            #         "ctype": compute_object.ctype,
+            #         "caccuracy": compute_object.caccuracy
+            #     }
+            #     })
 

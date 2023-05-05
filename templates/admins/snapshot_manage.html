@@ -1,7 +1,7 @@
 {% extends 'users/user-base.html' %}
 
 {% load static %}
-{% block title %}虚拟机管理{% endblock %}
+{% block title %}快照管理{% endblock %}
 {% block custom_css %}
     {#    <link href="css/domain.css" rel="stylesheet" title="" type="text/css"/>#}
     <style>
@@ -59,7 +59,7 @@
                                     <nav aria-label="breadcrumb">
                                         <ol class="breadcrumb">
                                             <li class="breadcrumb-item">虚拟机设置</li>
-                                            <li class="breadcrumb-item active" aria-current="page">虚拟机管理</li>
+                                            <li class="breadcrumb-item active" aria-current="page">快照管理</li>
                                         </ol>
                                     </nav>
                                 </div>
@@ -82,7 +82,7 @@
                                             <thead>
                                             <tr>
                                                 <th >ID</th>
-                                                <th >用户</th>
+                                                <!-- <th >用户</th> -->
                                                 <th >虚拟机</th>
                                                 <th>快照名</th>
                                                 <th>创建时间</th>
