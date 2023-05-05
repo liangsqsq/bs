@@ -14,7 +14,7 @@ function initFirst() {
         url: "/res/getSources/",
         success: function (data) {
             console.log("1111");
-            console.log(date);
+            console.log(data);
             initTree(data);
              //顶部信息
             renderTopRigth(data.all_node_info);
