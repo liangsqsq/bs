@@ -278,7 +278,6 @@ def get_resourceinfo(node_name):
     else:
         disk = round((1 - (float(disk_free) / float(disk_total))) * 100, 2)
 
-    print(za.historys_get(node_name, "vfs.fs.size[/,total]", 3, 1)[0]["value"])
     timeArray = time.localtime(int(clock))
     now_time = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
 
