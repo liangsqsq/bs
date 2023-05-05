@@ -56,7 +56,7 @@ def virtualhost(request, server_list=None):
         return render(request, "index.html")
 
 
-# 用户申请虚拟机
+# 申请虚拟机
 @decorate_apply
 def apply_vm(request):
     if request.method == "POST":
