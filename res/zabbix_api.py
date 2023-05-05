@@ -122,7 +122,7 @@ class Zabbix:
             "id": 1
         }
         response = requests.post(url=self.url, json=data).json()
-        # print('_historys_get response:\n', response)
+        print('_historys_get response:\n', response)
 
         return response.get('result', [])
 
