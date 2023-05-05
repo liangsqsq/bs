@@ -267,6 +267,7 @@ def get_resourceinfo(node_name):
         clock = 0
     else:
         mem = round((1 - (float(mem_available) / float(men_total))) * 100, 2)
+    print(mem, men_total, mem_available)
 
     # disk
     try:
