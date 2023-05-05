@@ -13,8 +13,8 @@ function initFirst() {
         type: "POST",
         url: "/res/getSources/",
         success: function (data) {
-            console.log("1111")
-            console.log(date)
+            console.log("1111");
+            console.log(date);
             initTree(data);
              //顶部信息
             renderTopRigth(data.all_node_info);
@@ -860,6 +860,7 @@ function renderMem() {
 
 //右上方10个平台数据
 function renderTopRigth(all_node_info) {
+    console.log(all_node_info);
     //动态生成顶部平台数据展示
     var a = '';
     for (var i = 0; i < all_node_info.length; i++) {
