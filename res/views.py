@@ -13,7 +13,7 @@ from vm.models import vm, workstation, cascade_list
 from admins.decorate import decorate_getSources, decorate_get_node_info
 
 @decorate_getSources
-def getSources(request, radar_count_other=0, compute_resource_count_other=0, weapon_count_other=0, host_other=None, all_node_info_other=None):
+def getSources(request, car_count_other=0, ship_count_other=0, aircraft_count_other=0, host_other=None, all_node_info_other=None):
     #if request.user.is_authenticated and request.user.is_superuser:
     if True:
         if request.method == "POST":
@@ -162,9 +162,9 @@ def getSources(request, radar_count_other=0, compute_resource_count_other=0, wea
                 all_node_info += all_node_info_other
 
             return HttpResponse(json.dumps({
-                'radar_count': radar_count+radar_count_other,
-                'computer_resource_count': compute_resource_count+compute_resource_count_other,
-                'weapon_count': weapon_count+weapon_count_other,
+                'radar_count': radar_count+car_count_other,
+                'computer_resource_count': compute_resource_count+ship_count_other,
+                'weapon_count': weapon_count+aircraft_count_other,
                 'host': host,
                 "all_node_info": all_node_info,
             }), content_type="application/json")
