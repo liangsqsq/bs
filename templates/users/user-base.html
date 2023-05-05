@@ -259,13 +259,13 @@
                             <span class="sublist-icon glyphicon glyphicon-check"></span>
                             <span class="sublist-title">节点审核</span></a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <div class="showtitle" style="width:100px;">级联审核</div>
                         <a href="{% url 'admins:cascade_apply' %}">
                             <span>&nbsp;&nbsp;</span>
                             <span class="sublist-icon glyphicon glyphicon-check"></span>
                             <span class="sublist-title">级联审核</span></a>
-                    </li>
+                    </li> -->
                     <li>
                         <div class="showtitle" style="width:100px;"> 现有域</div>
                         <a href="{% url 'admins:existing_domain' %}">
@@ -276,27 +276,27 @@
 
 
                 </ul>
-<!--                <div class="subNav sublist-down">-->
-<!--                    <span class="sublist-icon glyphicon glyphicon-chevron-down"></span>-->
-<!--                    <span class="sub-title">用户管理</span>-->
-<!--                </div>-->
-<!--                <ul class="navContent" style="display:block">-->
-<!--                    <li>-->
-<!--                        <div class="showtitle" style="width:100px;">用户管理</div>-->
-<!--                        <a href="{% url 'admins:show_users' 1%}">-->
-<!--                            <span>&nbsp;&nbsp;</span>-->
-<!--                            <span class="sublist-icon glyphicon glyphicon-user"></span>-->
-<!--                            <span class="sublist-title">用户管理</span></a>-->
-<!--                    </li>-->
+               <div class="subNav sublist-down">
+                   <span class="sublist-icon glyphicon glyphicon-chevron-down"></span>
+                   <span class="sub-title">用户管理</span>
+               </div>
+               <ul class="navContent" style="display:block">
+                   <li>
+                       <div class="showtitle" style="width:100px;">用户管理</div>
+                       <a href="{% url 'admins:show_users' 1%}">
+                           <span>&nbsp;&nbsp;</span>
+                           <span class="sublist-icon glyphicon glyphicon-user"></span>
+                           <span class="sublist-title">用户管理</span></a>
+                   </li>
 
-<!--                    <li>-->
-<!--                        <div class="showtitle" style="width:100px;">现有分组</div>-->
-<!--                        <a href="{% url 'admins:group_list' %}">-->
-<!--                            <span>&nbsp;&nbsp;</span>-->
-<!--                            <span class="sublist-icon glyphicon glyphicon-search"></span>-->
-<!--                            <span class="sublist-title">现有分组</span></a>-->
-<!--                    </li>-->
-<!--                </ul>-->
+                   <li>
+                       <div class="showtitle" style="width:100px;">现有分组</div>
+                       <a href="{% url 'admins:group_list' %}">
+                           <span>&nbsp;&nbsp;</span>
+                           <span class="sublist-icon glyphicon glyphicon-search"></span>
+                           <span class="sublist-title">现有分组</span></a>
+                   </li>
+               </ul>
                 <div class="subNav sublist-down">
                     <span class="sublist-icon glyphicon glyphicon-chevron-down"></span>
                     <span class="sub-title">镜像管理</span>
