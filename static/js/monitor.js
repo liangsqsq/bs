@@ -13,7 +13,7 @@ function initFirst() {
         type: "POST",
         url: "/res/getSources/",
         success: function (data) {
-            console.log(1111)
+            console.log("1111")
             console.log(date)
             initTree(data);
              //顶部信息
