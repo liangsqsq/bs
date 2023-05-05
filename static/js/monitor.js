@@ -13,6 +13,7 @@ function initFirst() {
         type: "POST",
         url: "/res/getSources/",
         success: function (data) {
+            console.log(date)
             initTree(data);
              //顶部信息
             renderTopRigth(data.all_node_info);
