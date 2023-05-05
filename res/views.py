@@ -263,10 +263,12 @@ def get_resourceinfo(node_name):
         men_total = za.historys_get(node_name, "vm.memory.size[total]", 3, 1)[0]["value"]
         clock = za.historys_get(node_name, "vm.memory.size[available]", 3, 1)[0]["clock"]
     except:
+        print("ffffffffffffffffffff")
         mem = 0
         clock = 0
     else:
         mem = round((1 - (float(mem_available) / float(men_total))) * 100, 2)
+        print("!!!!!!!!!!!")
         print(mem, men_total, mem_available)
 
     # disk
