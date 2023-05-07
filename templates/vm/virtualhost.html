@@ -104,17 +104,17 @@
                 var vm_type = $(".chosen-select-os").find("option:selected").text();
                 var disk = $(".chosen-select-disk").find("option:selected").text();
                 switch (disk) {
+                    case "10G":
+                        disk = 10;
+                        break;
+                    case "20G":
+                        disk = 20;
+                        break;
                     case "40G":
                         disk = 40;
                         break;
                     case "60G":
                         disk = 60;
-                        break;
-                    case "80G":
-                        disk = 80;
-                        break;
-                    case "100G":
-                        disk = 100;
                         break;
                 }
                 ;
