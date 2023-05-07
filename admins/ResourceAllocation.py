@@ -30,7 +30,7 @@ def ResourceAllocation(domain, vcpu, mem, disk):
         FreePoolDisk = pool.info()[3] / 1024 / 1024 / 1024
         print(str(FreeMem),str(FreePoolDisk))
 
-        if (FreeMem > mem) and (FreePoolDisk > disk):
+        if (FreeMem > mem):
             print("The server " + server.host_name + " can define this vm")
             isGetServer = True
             break
