@@ -28,5 +28,5 @@ how to start:
     python manage.py makemigrations
     python manage.py migrate
     python manage.py createsuperuser
-    python manage.py runserver localhost:27777
+python manage.py runserver localhost:27777
     
