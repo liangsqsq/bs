@@ -19,7 +19,7 @@
             $("#tab").on("click", ":button", function (event) {
                 console.log($(this).attr('id'));
                 var btn_id = $(this).attr('id');
-                var vmid = $(this).closest("tr").find("td").eq(2).text();
+                var vmid = $(this).closest("tr").find("td").eq(1).text();
                 var username = $(this).closest("tr").find("td").eq(1).text();
                 var domain_ip = $(this).closest("tr").find("td").eq(7).text();
                 console.log(domain_ip);
