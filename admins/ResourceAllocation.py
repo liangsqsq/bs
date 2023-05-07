@@ -7,6 +7,7 @@ from vm.models import workstation
 def ResourceAllocation(domain, vcpu, mem, disk):
     print('-------------------Resource Allocaiton-------------------')
     workstation_list = workstation.objects.filter(belong=domain,state=1)
+    print(mem,disk)
     isGetServer = False
     for server in workstation_list:
         conn = libvirt.open("qemu+ssh://" + server.user + "@" + server.ip + ":" + str(server.ssh_port) + "/system")
