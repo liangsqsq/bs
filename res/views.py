@@ -22,6 +22,7 @@ def getSources(request, car_count_other=0, ship_count_other=0, aircraft_count_ot
             compute_resource_count = transfer.objects.filter(classes=3).count()
             weapon_count = transfer.objects.filter(classes=1).count()
 
+            hostdict = {}
             host = []
             vm_workstation_list = workstation.objects.filter(state=1)
             container_node_list = docker_node.objects.filter(state=1)
@@ -38,12 +39,12 @@ def getSources(request, car_count_other=0, ship_count_other=0, aircraft_count_ot
 
                     vms = vm.objects.filter(belong=vm_workstation)
                     resources = []
-                    node_weapon_count = 0
+                    resCount = 0
                     for vm_ in vms:
                         vm_transfer = transfer.objects.get(resource_name=vm_.name)
                         vm_transfer_dict = {}
+                        resCount = resCount + 1
                         if vm_transfer.classes == 1:
-                            node_weapon_count = node_weapon_count + 1
                             vm_transfer_name = "无人机"
                             iconSkin = "wuqi"
                         elif vm_transfer.classes == 2:
@@ -57,13 +58,13 @@ def getSources(request, car_count_other=0, ship_count_other=0, aircraft_count_ot
                         vm_transfer_dict["iconSkin"] = iconSkin
                         resources.append(vm_transfer_dict)
                     server['children'] = resources
-                    host.append(server)
+                    hostdict[vm_workstation.host_name] = server
 
-                    vm_workstation_data["node_weapon_count"] = node_weapon_count
+                    vm_workstation_data["node_weapon_count"] = resCount
                     vm_workstation_dict = {}
                     vm_workstation_dict["node_name"] = vm_workstation.host_name
                     vm_workstation_dict["node_info"] = vm_workstation_data
-                    tmpdict[server["menuName"]] = vm_workstation_dict
+                    tmpdict[vm_workstation.host_name] = vm_workstation_dict
 
             for container_node in container_node_list:
                 container_node_data = get_resourceinfo(container_node.host_name)
@@ -75,12 +76,12 @@ def getSources(request, car_count_other=0, ship_count_other=0, aircraft_count_ot
 
                     containers = container.objects.filter(node=container_node)
                     resources = []
-                    node_weapon_count = 0
+                    resCount = 0
                     for container_ in containers:
                         container_transfer = transfer.objects.get(resource_name=container_.name)
                         container_transfer_dict = {}
+                        resCount = resCount + 1
                         if container_transfer.classes == 1:
-                            node_weapon_count = node_weapon_count + 1
                             container_transfer_name = "无人机"
                             iconSkin = "wuqi"
                         elif container_transfer.classes == 2:
@@ -94,13 +95,13 @@ def getSources(request, car_count_other=0, ship_count_other=0, aircraft_count_ot
                         container_transfer_dict["iconSkin"] = iconSkin
                         resources.append(container_transfer_dict)
                     server['children'] = resources
-                    host.append(server)
+                    (hostdict.get(container_node.host_name))["children"].append()
 
-                    container_node_data["node_weapon_count"] = node_weapon_count
+                    container_node_data["node_weapon_count"] = resCount
                     container_node_dict = {}
                     container_node_dict["node_name"] = container_node.host_name
                     container_node_dict["node_info"] = container_node_data
-                    tmpdict[server["menuName"]] = container_node_dict
+                    tmpdict.get(container_node.host_name)["node_info"]["node_weapon_count"] += resCount
 
             # for vm_workstation in vm_workstation_list:
             #     vm_workstation_data = get_resourceinfo(vm_workstation.host_name)
@@ -162,6 +163,7 @@ def getSources(request, car_count_other=0, ship_count_other=0, aircraft_count_ot
             if all_node_info_other:
                 all_node_info += all_node_info_other
             
+            host = list(hostdict.values())
             all_node_info = list(tmpdict.values())
 
             return HttpResponse(json.dumps({
