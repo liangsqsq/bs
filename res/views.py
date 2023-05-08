@@ -25,6 +25,7 @@ def getSources(request, car_count_other=0, ship_count_other=0, aircraft_count_ot
             host = []
             vm_workstation_list = workstation.objects.filter(state=1)
             container_node_list = docker_node.objects.filter(state=1)
+            tmpdict = {}
             all_node_info = []
             cascade_self = cascade_list.objects.get(is_self=True)
             for vm_workstation in vm_workstation_list:
@@ -62,7 +63,7 @@ def getSources(request, car_count_other=0, ship_count_other=0, aircraft_count_ot
                     vm_workstation_dict = {}
                     vm_workstation_dict["node_name"] = vm_workstation.host_name
                     vm_workstation_dict["node_info"] = vm_workstation_data
-                    all_node_info.append(vm_workstation_dict)
+                    tmpdict[vm_workstation_data.menuName] = vm_workstation_dict
 
             for container_node in container_node_list:
                 container_node_data = get_resourceinfo(container_node.host_name)
@@ -99,12 +100,12 @@ def getSources(request, car_count_other=0, ship_count_other=0, aircraft_count_ot
                     container_node_dict = {}
                     container_node_dict["node_name"] = container_node.host_name
                     container_node_dict["node_info"] = container_node_data
-                    all_node_info.append(container_node_dict)
+                    tmpdict[container_node_dict.menuName] = container_node_dict
 
             # for vm_workstation in vm_workstation_list:
             #     vm_workstation_data = get_resourceinfo(vm_workstation.host_name)
             #     now = time.localtime()
-            #     now_time = time.strftime("%Y-%m-%d %H:%M:%S", now)
+        #     now_time = time.strftime("%Y-%m-%d %H:%M:%S", now)
             #     now_hour = now_time[-7:-9:-1][::-1]
             #     now_minute = now_time[-4:-6:-1][::-1]
             #     now_second = now_time[-1:-3:-1][::-1]
@@ -161,7 +162,7 @@ def getSources(request, car_count_other=0, ship_count_other=0, aircraft_count_ot
             if all_node_info_other:
                 all_node_info += all_node_info_other
             
-            all_node_info = list(set(all_node_info))
+            all_node_info = list(tmpdict.values())
 
             return HttpResponse(json.dumps({
                 'radar_count': radar_count+car_count_other,
