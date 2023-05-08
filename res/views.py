@@ -160,6 +160,8 @@ def getSources(request, car_count_other=0, ship_count_other=0, aircraft_count_ot
 
             if all_node_info_other:
                 all_node_info += all_node_info_other
+            
+            all_node_info = list(set(all_node_info))
 
             return HttpResponse(json.dumps({
                 'radar_count': radar_count+car_count_other,

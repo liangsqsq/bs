@@ -1273,7 +1273,7 @@ def recv_info():
     used to recv the information from the client
     :return:
     '''
-    host = ''
+    host = '192.168.47.255'
     port = 10000
     # broadcast_ip = '172.18.20.255'
     s_recv = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
