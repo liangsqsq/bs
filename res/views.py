@@ -58,8 +58,6 @@ def getSources(request, car_count_other=0, ship_count_other=0, aircraft_count_ot
                         vm_transfer_dict["iconSkin"] = iconSkin
                         resources.append(vm_transfer_dict)
                     server['children'] = resources
-                    print("vvvvvvvvvvvvvvvvvvvvvvv")
-                    print(resources)
                     hostdict[vm_workstation.host_name] = server
 
                     vm_workstation_data["node_weapon_count"] = resCount
@@ -99,6 +97,7 @@ def getSources(request, car_count_other=0, ship_count_other=0, aircraft_count_ot
                     print("ccccccccccccccccccc")
                     print((hostdict.get(container_node.host_name))["children"])
                     server['children'] = resources.append((hostdict.get(container_node.host_name))["children"])
+                    print(server)
                     hostdict[container_node.host_name] = server
 
                     container_node_data["node_weapon_count"] = resCount+tmpdict.get(container_node.host_name)["node_info"]["node_weapon_count"]
