@@ -94,14 +94,14 @@ def getSources(request, car_count_other=0, ship_count_other=0, aircraft_count_ot
                         container_transfer_dict["menuName"] = container_transfer_name + str(container_transfer.model)
                         container_transfer_dict["iconSkin"] = iconSkin
                         resources.append(container_transfer_dict)
-                    server['children'] = resources
-                    (hostdict.get(container_node.host_name))["children"].append()
+                    server['children'] = resources.append((hostdict.get(container_node.host_name))["children"])
+                    hostdict[container_node.host_name] = server
 
-                    container_node_data["node_weapon_count"] = resCount
+                    container_node_data["node_weapon_count"] = resCount+tmpdict.get(container_node.host_name)["node_info"]["node_weapon_count"]
                     container_node_dict = {}
                     container_node_dict["node_name"] = container_node.host_name
                     container_node_dict["node_info"] = container_node_data
-                    tmpdict.get(container_node.host_name)["node_info"]["node_weapon_count"] += resCount
+                    tmpdict[container_node.host_name] = container_node_dict
 
             # for vm_workstation in vm_workstation_list:
             #     vm_workstation_data = get_resourceinfo(vm_workstation.host_name)
