@@ -63,7 +63,7 @@ def getSources(request, car_count_other=0, ship_count_other=0, aircraft_count_ot
                     vm_workstation_dict = {}
                     vm_workstation_dict["node_name"] = vm_workstation.host_name
                     vm_workstation_dict["node_info"] = vm_workstation_data
-                    tmpdict[vm_workstation_data["menuName"]] = vm_workstation_dict
+                    tmpdict[server["menuName"]] = vm_workstation_dict
 
             for container_node in container_node_list:
                 container_node_data = get_resourceinfo(container_node.host_name)
@@ -100,7 +100,7 @@ def getSources(request, car_count_other=0, ship_count_other=0, aircraft_count_ot
                     container_node_dict = {}
                     container_node_dict["node_name"] = container_node.host_name
                     container_node_dict["node_info"] = container_node_data
-                    tmpdict[container_node_data["menuName"]] = container_node_dict
+                    tmpdict[server["menuName"]] = container_node_dict
 
             # for vm_workstation in vm_workstation_list:
             #     vm_workstation_data = get_resourceinfo(vm_workstation.host_name)
