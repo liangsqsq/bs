@@ -47,13 +47,25 @@
                                     window.location.reload();
                                 })
                             } else if (data["st"] === 2) {
+                                if($("body").hasClass("modal-open")){
+                                    $("#barModal").modal("hide");
+                                }
                                 alert("失败:容器启动失败");
+                                $("#agree_docker").attr("disabled", false);
                             } else if (data["st"] === 7) {
+                                if($("body").hasClass("modal-open")){
+                                    $("#barModal").modal("hide");
+                                }
                                 alert("失败:容器启动成功，数据库写入失败");
+                                $("#agree_docker").attr("disabled", false);
                             }
                         },
                         error: function () {
+                            if($("body").hasClass("modal-open")){
+                                $("#barModal").modal("hide");
+                            }
                             alert("失败");
+                            $("#agree_docker").attr("disabled", false);
                         }
                     })
                 } else {

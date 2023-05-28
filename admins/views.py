@@ -17,7 +17,7 @@ from django.contrib.auth.models import Group
 from users.models import UserProfile, group
 from vm.models import *
 from container.models import *
-from admins.ResourceAllocation import ResourceAllocation
+from admins.ResourceAllocation import DynamicDockerAllocation, ResourceAllocation
 from admins.sshConnection import *
 from admins.getVMInfo import getVMInfo
 from admins.customVM import *
@@ -1357,3 +1357,10 @@ def quit_cascade(request):
         return HttpResponse(json.dumps({"st": 1}), content_type="application/json")
     else:
         return HttpResponse(json.dumps({"st": 2}), content_type="application/json")
+
+
+def Allocation_init():
+    global docker_lock 
+    docker_lock = threading.Lock()
+    # 启动动态调度的定时任务，此处10分钟执行一次
+    threading.Timer(600, DynamicDockerAllocation, ()).start()

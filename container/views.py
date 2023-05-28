@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import render
+from admins.ResourceAllocation import GetAvaliableNode
 
 # Create your views here.
 import docker
@@ -331,12 +332,18 @@ def agree_docker(request):
         # 镜像对象
         img_ver = my_docker_apply.img_version
         print(img_ver)
-        # node
-        node=docker_node.objects.get(ip=my_docker_apply.domain_node)
+        # 找到对应域然后获取分配列表
+        domain_info = domain.objects.get(gw_ip=my_docker_apply.domain_node)
+        node_list = docker_node.objects.filter(belong_id=domain_info.id)
+        # 获得排序后的列表
+        avaliable_node_list = GetAvaliableNode(node_list)
+        if len(avaliable_node_list) == 0:
+            print("no avaliable node")
+            return
         # 获取镜像信息
         img_info = my_docker_apply.img_version
         # 建立连接(demo)并获取镜像
-        base_url = 'tcp://' + node.ip + ':2375'
+        base_url = 'tcp://' + avaliable_node_list[0]["node"].ip + ':2375'
         C = docker.DockerClient(base_url=base_url, version='auto', timeout=10)
         print(C)
         # 创建宿主机上的挂载目录文件(如果有)
@@ -382,14 +389,14 @@ def agree_docker(request):
             name = str(container_count+1)+"admin"
         print(images, name)
         c2 = C.containers.run(images, detach=True, tty=True, stdin_open=True, name=name,
-                              command=command, volumes={"/home/jar": {"bind": "/home/jar", "mode": "rw"}})
-        print("hello")
+                              command=command, volumes={"/home/jinx": {"bind": "/home/jinx", "mode": "rw"}})
+        print("hello "+c2)
 
         if c2:
             st=7
             agree_container = container.objects.create(Only_Id=c2.id,name=name, port="22", cpu_cores=apply_cpu,
-                                                           memory=apply_mem,img=img_ver,volume_name="/home/jar",
-                                                   mountPoint="/home/jar", node=node, region=apply_domain, user=user)
+                                                           memory=apply_mem,img=img_ver,volume_name="/home/jinx",
+                                                   mountPoint="/home/jinx", node=avaliable_node_list[0]["node"].ip, region=apply_domain, user=user)
             agree_transfer = transfer.objects.create(resource_name=name,classes=class_name, model=model_name)
             agree_transfer.save()
             agree_model = model.objects.get(model_name=model_name)

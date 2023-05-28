@@ -64,7 +64,7 @@ def buildVMNAT(gw, vmip, vmport, flags=FLAG_CONN_NAT):
         DPORT = getAvailablePort(channel, OTHER_START_PORT, OTHER_END_PORT)
 
     nat_cmd = 'iptables -t nat -A PREROUTING -i eth1 -p tcp --dport ' + DPORT + ' -j DNAT --to-destination ' + vmip + ':' + str(
-        vmport) + ';service iptables save'
+        vmport) + ';/sbin/iptables-save'
     print('nat cmd :' + nat_cmd)
 
     channel.send(nat_cmd)
@@ -110,7 +110,7 @@ def delPort(gw, vmip, DPORT, vmport):
     DPORT = str(DPORT)
     nat_cmd = 'iptables -t nat -D PREROUTING -i eth1 -p tcp --dport ' + DPORT + ' -j DNAT --to-destination ' + vmip + ':' + str(
         vmport) + \
-              ';service iptables save'
+              ';/sbin/iptables-save'
     print('del nat cmd :' + nat_cmd)
 
     channel.send(nat_cmd)
