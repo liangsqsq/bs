@@ -116,13 +116,13 @@
                             <ul class="dropdown-menu dropback">
                                 <li><a href="{% url 'admins:apply_vm' 1 %}">后台管理</a></li>
                                 <!-- <li><a href="{% url 'users:user_info' %}">账号信息</a></li> -->
-                                <!-- <li><a href="{% url 'users:logout' %}">退出</a></li> -->
+                                <li><a href="{% url 'users:logout' %}">退出</a></li>
                             </ul>
                         {% else %}
                             <ul class="dropdown-menu dropback">
 
                                 <!-- <li><a href="{% url 'users:user_info' %}">账号信息</a></li> -->
-                                <!-- <li><a href="{% url 'users:logout' %}">退出</a></li> -->
+                                <li><a href="{% url 'users:logout' %}">退出</a></li>
                             </ul>
                         {% endif %}
                     </li>
